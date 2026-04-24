@@ -1,0 +1,16 @@
+<!-- Owner: Mina — feature: shared/toast -->
+<div class="toast-stack" aria-live="polite">
+  @for (t of toasts(); track t.id) {
+    <div class="toast toast--{{ t.type }}" role="status">
+      <span>{{ t.message }}</span>
+      <button
+        type="button"
+        class="toast__close"
+        (click)="dismiss(t.id)"
+        aria-label="Dismiss notification"
+      >
+        ×
+      </button>
+    </div>
+  }
+</div>

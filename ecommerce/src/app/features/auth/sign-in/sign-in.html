@@ -1,0 +1,21 @@
+<!-- Owner: Mina — feature: auth/sign-in -->
+<section class="auth">
+  <h1>Sign in</h1>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="auth__form" novalidate>
+    <label>
+      <span>Email</span>
+      <input type="email" formControlName="email" autocomplete="email" />
+    </label>
+    <label>
+      <span>Password</span>
+      <input type="password" formControlName="password" autocomplete="current-password" />
+    </label>
+    <a routerLink="/auth/forgot-password" class="auth__link">Forgot password?</a>
+    <button type="submit" [disabled]="submitting()">
+      {{ submitting() ? 'Signing in…' : 'Sign in' }}
+    </button>
+    <p>
+      No account yet? <a routerLink="/auth/sign-up">Create one</a>
+    </p>
+  </form>
+</section>

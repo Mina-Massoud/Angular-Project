@@ -1,0 +1,4 @@
+/* Owner: Mina — root layout */
+.app-main {
+  min-height: calc(100vh - 8rem);
+}
