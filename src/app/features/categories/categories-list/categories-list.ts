@@ -1,5 +1,5 @@
 // Owner: Noura — feature: categories/list
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CategoriesService } from '../services/categories.service';
 import { Category } from '../models/category.model';
 
@@ -10,46 +10,45 @@ import { Category } from '../models/category.model';
   templateUrl: './categories-list.html',
   styleUrl: './categories-list.css',
 })
-export class CategoriesList {
-  // TODO: Noura — fetch + display all categories
-  //services injected categories.service.ts
+export class CategoriesList implements OnInit {
   private readonly categoriesService = inject(CategoriesService);
-  private readonly changeDetector = inject(ChangeDetectorRef);
 
-  //properties:
-  categories: Category[] = [];
-  currentPage: number = 1;
-  limit: number = 8;
-  totalPages: number = 0;
-  pages: number[] = [];
+  categories = signal<Category[]>([]);
+  isLoading = signal(true);
+  hasError = signal(false);
+  currentPage = signal(1);
+  totalPages = signal(0);
 
+  pages = computed(() =>
+    Array.from({ length: this.totalPages() }, (_, i) => i + 1),
+  );
 
-  //methods:
-  ngOnInit() {
+  private readonly limit = 8;
+
+  ngOnInit(): void {
     this.loadCategories();
   }
 
-  loadCategories() {
-    this.categoriesService.getAllCategories(this.currentPage, this.limit).subscribe({
+  loadCategories(): void {
+    this.isLoading.set(true);
+    this.hasError.set(false);
+
+    this.categoriesService.getAllCategories(this.currentPage(), this.limit).subscribe({
       next: (res) => {
-        this.categories = res.data;
-        this.totalPages = res.metadata.numberOfPages;
-        this.pages = Array.from(
-          { length: this.totalPages },
-          (_, i) => i + 1
-        );
-        console.log(res.data);
-        this.changeDetector.detectChanges();
+        this.categories.set(res.data);
+        this.totalPages.set(res.metadata.numberOfPages);
+        this.isLoading.set(false);
       },
-      error: (err) => {
-        console.error('Error fetching categories:', err);
-      }
-    })
+      error: () => {
+        this.hasError.set(true);
+        this.isLoading.set(false);
+      },
+    });
   }
 
-  //pagination methods:
-  goToPage(p: number) {
-    this.currentPage = p;
+  goToPage(page: number): void {
+    if (page < 1 || page > this.totalPages() || page === this.currentPage()) return;
+    this.currentPage.set(page);
     this.loadCategories();
   }
 }

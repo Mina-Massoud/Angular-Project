@@ -1,30 +1,19 @@
-// // Owner: Noura — feature: brands/model
-// export interface Brand {
-//   _id: string;
-//   name: string;
-//   slug: string;
-//   image: string;
-//   // TODO: Noura — extend per API response
-// }
-
-
-// models/brand.model.ts
-
+// Owner: Noura — feature: brands/model
 export interface Brand {
-  _id:       string;
-  name:      string;
-  slug:      string;
-  image:     string;
+  _id: string;
+  name: string;
+  slug: string;
+  image: string;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface BrandsResponse {
-  results:  number;
+  results: number;
   metadata: {
-    currentPage:   number;
+    currentPage: number;
     numberOfPages: number;
-    limit:         number;
+    limit: number;
   };
   data: Brand[];
 }

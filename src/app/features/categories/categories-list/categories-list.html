@@ -1,96 +1,138 @@
-<!-- Categories Page -->
+<!-- Owner: Noura — feature: categories/list -->
 <div class="bg-white min-h-screen px-6 sm:px-10 lg:px-16 py-12">
-
-    <!-- Header -->
-    <div class="text-center mb-10">
-        <p class="text-xs font-bold tracking-widest uppercase mb-3 
-          inline-block bg-gradient-to-r from-[#8E44AD] via-[#C052B3] to-[#F06292] 
-          bg-clip-text text-transparent">
-            Shop by Category
-        </p>
-        <h1 class="text-4xl font-extrabold text-gray-900 mb-3">
-            All Categories
-        </h1>
-        <p class="text-sm text-gray-500">
-            Find exactly what you're looking for across our curated collections.
-        </p>
-    </div>
-
-    <!-- Categories Grid -->
-    @if (categories.length > 0) {
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-        @for (category of categories; track category._id) {
-        <div class="group relative h-[340px] rounded-2xl overflow-hidden cursor-pointer bg-gray-100">
-
-            <img [src]="category.image" class="w-full h-full object-cover" />
-
-            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-
-            <div class="absolute bottom-5 left-5">
-                <h3 class="text-lg font-bold text-white">
-                    {{ category.name }}
-                </h3>
-            </div>
-
-        </div>
-        }
-    </div>
-    }
-
-    <!-- Empty State (Static Example) -->
-    @if (categories.length === 0) {
-    <div class="flex items-center justify-center py-20">
-        <p class="text-sm text-gray-400">No categories available.</p>
-    </div>
-    }
-    <!-- Pagination Numbers -->
-    @if (totalPages > 1) {
-  <div class="flex justify-center items-center gap-2 mt-12">
-
-    <!-- Prev -->
-    <button
-      (click)="goToPage(currentPage - 1)"
-      [disabled]="currentPage === 1"
-      class="w-9 h-9 flex items-center justify-center rounded-full
-             border border-gray-200 text-gray-500
-             hover:border-gray-900 hover:text-gray-900
-             disabled:opacity-40 disabled:cursor-not-allowed transition-all">
-
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
-      </svg>
-    </button>
-
-    <!-- Pages -->
-    @for (page of pages; track page) {
-      <button
-        (click)="goToPage(page)"
-        class="w-9 h-9 flex items-center justify-center rounded-full
-               text-sm font-medium transition-all duration-150"
-        [class.bg-gray-900]="currentPage === page"
-        [class.text-white]="currentPage === page"
-        [class.bg-gray-100]="currentPage !== page"
-        [class.text-gray-700]="currentPage !== page">
-
-        {{ page }}
-      </button>
-    }
-
-    <!-- Next -->
-    <button
-      (click)="goToPage(currentPage + 1)"
-      [disabled]="currentPage === totalPages"
-      class="w-9 h-9 flex items-center justify-center rounded-full
-             border border-gray-200 text-gray-500
-             hover:border-gray-900 hover:text-gray-900
-             disabled:opacity-40 disabled:cursor-not-allowed transition-all">
-
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-      </svg>
-    </button>
-
+  <!-- Header -->
+  <div class="text-center mb-10">
+    <p
+      class="text-xs font-bold tracking-widest uppercase mb-3
+        inline-block bg-gradient-to-r from-[#8E44AD] via-[#C052B3] to-[#F06292]
+        bg-clip-text text-transparent"
+    >
+      Shop by Category
+    </p>
+    <h1 class="text-4xl font-extrabold text-gray-900 mb-3">All Categories</h1>
+    <p class="text-sm text-gray-500">
+      Find exactly what you're looking for across our curated collections.
+    </p>
   </div>
-}
 
+  <!-- Loading -->
+  @if (isLoading()) {
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+      @for (item of [].constructor(8); track $index) {
+        <div class="h-[340px] rounded-2xl bg-gray-100 animate-pulse"></div>
+      }
+    </div>
+  }
+
+  <!-- Error -->
+  @if (!isLoading() && hasError()) {
+    <div class="flex flex-col items-center justify-center py-20 gap-3">
+      <p class="text-sm text-gray-400">Couldn't load categories</p>
+      <button
+        type="button"
+        (click)="loadCategories()"
+        class="text-xs font-semibold text-white bg-gray-900 px-5 py-2
+               rounded-lg hover:bg-gray-700 transition-colors"
+      >
+        Try Again
+      </button>
+    </div>
+  }
+
+  <!-- Categories Grid -->
+  @if (!isLoading() && !hasError() && categories().length > 0) {
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+      @for (category of categories(); track category._id) {
+        <div
+          class="category-card group relative h-[340px] rounded-2xl overflow-hidden cursor-pointer bg-gray-100"
+        >
+          <img
+            [src]="category.image"
+            [alt]="category.name"
+            class="w-full h-full object-cover"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+          <div class="absolute bottom-5 left-5">
+            <h3 class="text-lg font-bold text-white">{{ category.name }}</h3>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Empty -->
+  @if (!isLoading() && !hasError() && categories().length === 0) {
+    <div class="flex items-center justify-center py-20">
+      <p class="text-sm text-gray-400">No categories available.</p>
+    </div>
+  }
+
+  <!-- Pagination Numbers -->
+  @if (!isLoading() && !hasError() && totalPages() > 1) {
+    <div class="flex justify-center items-center gap-2 mt-12">
+      <!-- Prev -->
+      <button
+        type="button"
+        aria-label="Previous page"
+        (click)="goToPage(currentPage() - 1)"
+        [disabled]="currentPage() === 1"
+        class="w-9 h-9 flex items-center justify-center rounded-full
+               border border-gray-200 text-gray-500
+               hover:border-gray-900 hover:text-gray-900
+               disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+      >
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+
+      <!-- Pages -->
+      @for (page of pages(); track page) {
+        <button
+          type="button"
+          [attr.aria-label]="'Go to page ' + page"
+          [attr.aria-current]="currentPage() === page ? 'page' : null"
+          (click)="goToPage(page)"
+          class="w-9 h-9 flex items-center justify-center rounded-full
+                 text-sm font-medium transition-all duration-150"
+          [class.bg-gray-900]="currentPage() === page"
+          [class.text-white]="currentPage() === page"
+          [class.bg-gray-100]="currentPage() !== page"
+          [class.text-gray-700]="currentPage() !== page"
+        >
+          {{ page }}
+        </button>
+      }
+
+      <!-- Next -->
+      <button
+        type="button"
+        aria-label="Next page"
+        (click)="goToPage(currentPage() + 1)"
+        [disabled]="currentPage() === totalPages()"
+        class="w-9 h-9 flex items-center justify-center rounded-full
+               border border-gray-200 text-gray-500
+               hover:border-gray-900 hover:text-gray-900
+               disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+      >
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </div>
+  }
 </div>

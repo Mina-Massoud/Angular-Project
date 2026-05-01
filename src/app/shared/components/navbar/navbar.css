@@ -185,10 +185,10 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   min-width: 160px;
   overflow: hidden;
-  animation: dropIn 0.15s ease;
+  animation: drop-in 0.15s ease;
   z-index: 200;
 }
-@keyframes dropIn {
+@keyframes drop-in {
   from {
     opacity: 0;
     transform: translateY(-6px);

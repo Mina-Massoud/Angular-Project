@@ -7,20 +7,16 @@ type Currency = 'EGP' | 'USD' | 'EUR';
   standalone: true,
 })
 export class CurrencyFormatPipe implements PipeTransform {
+  transform(value: number | null | undefined, currency: Currency = 'EGP'): string {
+    if (value == null || Number.isNaN(value)) return '—';
 
-  transform(
-    value: number | null | undefined,
-    currency: Currency = 'EGP'
-  ): string {
-
-    if (value == null) return '—';
-
-    const locale = navigator.language || 'en-US';
+    const locale =
+      typeof navigator !== 'undefined' && navigator.language ? navigator.language : 'en-EG';
 
     return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency,
-      minimumFractionDigits: 0,
+      minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(value);
   }
