@@ -1,6 +1,10 @@
 // Owner: Mostafa Shanab — feature: shared/navbar
-import { Component, signal } from '@angular/core';
+
+import { Component, inject, signal } from '@angular/core';
+
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { CartService } from '../../../features/cart/services/cart.service';
+import { WishlistService } from '../../../features/wishlist/services/wishlist.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,8 +14,11 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './navbar.css',
 })
 export class Navbar {
-  cartCount = signal(3);
-  wishlistCount = signal(5);
+  private cartService = inject(CartService);
+  private wishlistService = inject(WishlistService);
+  cartCount = this.cartService.cartCount;
+  wishlistCount = this.wishlistService.wishlistCount;
+
   isUserMenuOpen = signal(false);
   userName = 'Shanab';
 
@@ -25,6 +32,11 @@ export class Navbar {
     { label: 'Store Location', path: '/store' },
     { label: 'Contact Us', path: '/contact' },
   ];
+
+  ngOnInit() {
+    this.cartService.loadCartCount();
+    this.wishlistService.loadWishlistCount();
+  }
 
   toggleUserMenu() {
     this.isUserMenuOpen.update((v) => !v);

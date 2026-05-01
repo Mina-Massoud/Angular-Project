@@ -1,2 +1,88 @@
-<!-- Owner: Ahmed Gabr — feature: wishlist/page -->
-<p>wishlist-page works!</p>
+<div class="p-4">
+
+    <!-- Loading -->
+    @if (isLoading) {
+    <div class="text-center py-10 text-gray-500 animate-pulse">
+        Loading wishlist...
+    </div>
+    }
+
+    <!-- Empty State -->
+    @if (!isLoading && wishlist.length === 0) {
+    <div class="text-center py-16 text-gray-500">
+        <p class="text-lg font-medium">Your wishlist is empty </p>
+        <p class="text-sm mt-2">Start adding products you like</p>
+    </div>
+    }
+
+    <!-- Table -->
+    @if (!isLoading && wishlist.length > 0) {
+
+    <div class="relative overflow-x-auto bg-white shadow rounded-lg border border-gray-200">
+
+        <table class="w-full text-sm text-left text-gray-700">
+
+            <thead class="text-sm bg-gray-100 border-b border-gray-200 text-gray-600">
+                <tr>
+                    <th class="px-4 py-3"></th>
+                    <th class="px-6 py-3 font-medium">Product</th>
+                    <th class="px-6 py-3 font-medium">Price</th>
+                    <th class="px-6 py-3 font-medium text-right">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @for (item of wishlist; track item._id) {
+
+                <tr class="border-b hover:bg-gray-50">
+
+                    <!-- Image -->
+                    <td class="p-4">
+                        <img [src]="item.imageCover" class="w-16 md:w-20 object-cover rounded" />
+                    </td>
+
+                    <!-- Title -->
+                    <td class="px-6 py-4 font-semibold text-gray-900">
+                        {{ item.title }}
+                    </td>
+
+                    <!-- Price -->
+                    <td class="px-6 py-4 font-semibold text-gray-900">
+                        {{ item.price | currencyFormat }}
+                    </td>
+
+                    <td class="px-6 py-4 text-right space-x-2">
+
+                        <button (click)="addToCart(item._id)"
+                            [disabled]="updatingItems[item._id] || cartService.cartItemsIds().has(item._id)"
+                            class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                            @if(updatingItems[item._id]) {
+                            Adding...
+                            } @else if(cartService.cartItemsIds().has(item._id)) {
+                            In Cart
+                            } @else {
+                            Add to Cart
+                            }
+                        </button>
+
+                        <button (click)="removeItem(item._id)" [disabled]="updatingItems[item._id]"
+                            class="text-red-600 hover:underline text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                            Remove
+                        </button>
+
+                    </td>
+
+                </tr>
+
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    }
+
+</div>
