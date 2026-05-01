@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+// Owner: Noura — feature: brands/list
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BrandsService } from '../services/brands.service';
@@ -95,6 +96,18 @@ export class BrandsList implements OnInit {
   }
 
   onImageError(e: Event): void {
-    (e.target as HTMLImageElement).src = 'assets/placeholder.png';
+    const img = e.target as HTMLImageElement;
+    // Avoid infinite loop if the fallback also fails to load.
+    img.onerror = null;
+    img.src = BRAND_IMAGE_FALLBACK;
   }
 }
+
+const BRAND_IMAGE_FALLBACK =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">' +
+      '<rect width="80" height="80" fill="#f3f4f6"/>' +
+      '<text x="40" y="44" font-size="9" text-anchor="middle" fill="#9ca3af" font-family="sans-serif">No image</text>' +
+      '</svg>',
+  );
