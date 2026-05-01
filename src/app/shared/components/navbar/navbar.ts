@@ -1,6 +1,7 @@
 // Owner: Mostafa Shanab — feature: shared/navbar
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { CartService } from '../../../features/cart/services/cart.service';
 
 @Component({
   selector: 'app-navbar',
@@ -11,4 +12,6 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class Navbar {
   // TODO: Mostafa Shanab — show links, cart badge, user menu, sign-out
+
+
 }
