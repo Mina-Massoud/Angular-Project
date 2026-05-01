@@ -6,43 +6,46 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../../environments/environment';
-import { Observable } from 'rxjs';
+
+import { Observable, tap } from 'rxjs';
 // TODO: Ahmed Gabr — implement add(productId), remove(productId), getUserWishlist()
 @Injectable({ providedIn: 'root' })
 export class WishlistService {
 
-
   private http = inject(HttpClient);
   private base = `${environment.baseUrl}/wishlist`;
 
-  //add to wishlist 
+  wishlistCount = signal<number>(0);
+
   addToWishlist(productId: string): Observable<any> {
-    return this.http.post(this.base, { productId });
+    return this.http.post(this.base, { productId }).pipe(
+      tap((res: any) => {
+        // ✅ update count after add
+        this.wishlistCount.set(res?.data?.length ?? res?.count ?? 0);
+      })
+    );
   }
 
-  // delete specific item from wishlist 
   removeItem(productId: string): Observable<any> {
-    return this.http.delete(`${this.base}/${productId}`);
+    return this.http.delete(`${this.base}/${productId}`).pipe(
+      tap((res: any) => {
+        this.wishlistCount.set(res?.data?.length ?? res?.count ?? 0);
+      })
+    );
   }
 
-  // get logged wishlist
   getWishlist(): Observable<any> {
     return this.http.get(this.base);
   }
 
-
-  // count of wishlist items 
-  wishlistCount = signal<number>(0);
   loadWishlistCount() {
     this.getWishlist().subscribe({
       next: (res: any) => {
-        this.wishlistCount.set(res.count || res.data?.length || 0);
+        this.wishlistCount.set(res?.count || res?.data?.length || 0);
       },
       error: () => {
         this.wishlistCount.set(0);
       }
     });
   }
-
-
 }

@@ -1,11 +1,9 @@
 
+import { Component, inject, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { WishlistService } from '../services/wishlist.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { CurrencyFormatPipe } from '../../../shared/pipes/currency-format.pipe';
 import { CartService } from '../../cart/services/cart.service';
-
-import { Component, inject, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
-// ... other imports
 
 @Component({
   selector: 'app-wishlist-page',
@@ -18,7 +16,7 @@ import { Component, inject, ChangeDetectorRef, ChangeDetectionStrategy } from '@
 export class WishlistPage {
 
   private wishlistService = inject(WishlistService);
-  private cartService = inject(CartService);
+  cartService = inject(CartService); // Make public for template use
   private toast = inject(ToastService);
   private cdr = inject(ChangeDetectorRef);
 
@@ -32,16 +30,19 @@ export class WishlistPage {
 
   loadWishlist() {
     this.isLoading = true;
+    this.cdr.markForCheck();
 
     this.wishlistService.getWishlist().subscribe({
       next: (res) => {
-        this.wishlist = [...(res.data ?? [])];
+        this.wishlist = res?.data ? [...res.data] : [];
         this.wishlistService.wishlistCount.set(this.wishlist.length);
         this.isLoading = false;
         this.cdr.markForCheck();
       },
       error: () => {
-        this.toast.error('Failed to load wishlist');
+
+        this.wishlist = [];
+        this.wishlistService.wishlistCount.set(0);
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -51,6 +52,7 @@ export class WishlistPage {
   removeItem(productId: string) {
     if (this.updatingItems[productId]) return;
     this.updatingItems[productId] = true;
+    this.cdr.markForCheck();
 
     this.wishlistService.removeItem(productId).subscribe({
       next: () => {
@@ -69,16 +71,46 @@ export class WishlistPage {
   }
 
   addToCart(productId: string) {
+    if (this.updatingItems[productId]) return;
+
+    if (this.cartService.cartItemsIds().has(productId)) {
+      this.toast.error('Item already in cart');
+      return;
+    }
+
+    this.updatingItems[productId] = true;
+    this.cdr.markForCheck();
+
     this.cartService.addToCart(productId).subscribe({
       next: () => {
-        this.toast.success('Added to cart');
-        this.wishlist = this.wishlist.filter(item => item._id !== productId);
-        this.wishlistService.wishlistCount.set(this.wishlist.length);
-        this.cartService.loadCartCount();
-        this.cdr.markForCheck();
+
+        this.wishlistService.removeItem(productId).subscribe({
+          next: () => {
+
+            
+            this.wishlist = this.wishlist.filter(item => item._id !== productId);
+
+            this.wishlistService.wishlistCount.set(this.wishlist.length);
+            
+            this.cartService.loadCartCount();
+
+            this.toast.success('Moved to cart');
+
+            delete this.updatingItems[productId];
+            this.cdr.markForCheck();
+          },
+          error: () => {
+            this.toast.error('Added to cart but failed to remove from wishlist');
+            delete this.updatingItems[productId];
+            this.cdr.markForCheck();
+          }
+        });
+
       },
       error: () => {
         this.toast.error('Failed to add to cart');
+        delete this.updatingItems[productId];
+        this.cdr.markForCheck();
       }
     });
   }
