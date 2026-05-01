@@ -1,5 +1,5 @@
 // Owner: Mostafa Shanab — feature: shared/navbar
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CartService } from '../../../features/cart/services/cart.service';
 
@@ -12,6 +12,4 @@ import { CartService } from '../../../features/cart/services/cart.service';
 })
 export class Navbar {
   // TODO: Mostafa Shanab — show links, cart badge, user menu, sign-out
-
-
 }

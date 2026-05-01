@@ -4,5 +4,16 @@ export interface Brand {
   name: string;
   slug: string;
   image: string;
-  // TODO: Noura — extend per API response
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BrandsResponse {
+  results: number;
+  metadata: {
+    currentPage: number;
+    numberOfPages: number;
+    limit: number;
+  };
+  data: Brand[];
 }
