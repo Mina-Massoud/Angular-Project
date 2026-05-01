@@ -1,1 +1,149 @@
 /* Owner: Mostafa Shanab — feature: shared/footer */
+:host {
+  --primary: #7c3aed;
+  --text: #1e1b4b;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+}
+
+.footer {
+  background: #f8f7ff;
+  border-top: 1px solid var(--border);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.footer-grid {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 2.5rem;
+}
+
+/* Brand */
+.brand .logo {
+  display: inline-block;
+  text-decoration: none;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.75rem;
+}
+.brand .logo strong {
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.brand p {
+  font-size: 0.875rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0 0 1.25rem;
+}
+
+.socials {
+  display: flex;
+  gap: 0.5rem;
+}
+.socials a {
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid var(--border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-decoration: none;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+}
+.socials a:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+/* Columns */
+.col h4 {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text);
+  margin: 0 0 1rem;
+}
+
+.col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.col ul li a {
+  font-size: 0.875rem;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.col ul li a:hover {
+  color: var(--primary);
+}
+
+/* Bottom */
+.footer-bottom {
+  border-top: 1px solid var(--border);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  max-width: 100%;
+}
+
+.footer-bottom p {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+.payments {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.payments span {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.25rem 0.6rem;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  color: var(--muted);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .brand {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 480px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
