@@ -6,38 +6,47 @@
 //   GET  /api/v1/orders/user/:userId
 //
 // NOTE: Mina's checkout page imports this service. Keep public method names stable.
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
 
-export interface ShippingAddress {
-  details: string;
-  phone: string;
-  city: string;
-}
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
+import { Order, ShippingAddress } from '../models/order.model';
+
+// export interface ShippingAddress {
+//   details: string;
+//   phone: string;
+//   city: string;
+// }
 
 @Injectable({ providedIn: 'root' })
 export class OrdersService {
-  createCashOrder(_cartId: string, _shippingAddress: ShippingAddress): Observable<unknown> {
-    // TODO: Mostafa Shanab
-    return of(null);
+  private readonly http = inject(HttpClient);
+  private readonly base = environment.baseUrl;
+
+  createCashOrder(cartId: string, shippingAddress: ShippingAddress): Observable<{ data: Order }> {
+    return this.http.post<{ data: Order }>(`${this.base}/orders/${cartId}`, { shippingAddress });
   }
 
   createCheckoutSession(
-    _cartId: string,
-    _shippingAddress: ShippingAddress,
-    _successUrl: string,
-  ): Observable<unknown> {
-    // TODO: Mostafa Shanab
-    return of(null);
+    cartId: string,
+    shippingAddress: ShippingAddress,
+    successUrl: string,
+  ): Observable<any> {
+    return this.http.post<any>(`${this.base}/orders/checkout-session/${cartId}?url=${successUrl}`, {
+      shippingAddress,
+    });
   }
 
-  getAllOrders(): Observable<unknown[]> {
-    // TODO: Mostafa Shanab
-    return of([]);
+  getAllOrders(): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.base}/orders`);
   }
 
-  getUserOrders(_userId: string): Observable<unknown[]> {
-    // TODO: Mostafa Shanab
-    return of([]);
+  getUserOrders(userId: string): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.base}/orders/user/${userId}`);
+  }
+
+  getOrderById(id: string): Observable<Order> {
+    return this.http.get<Order>(`${this.base}/orders/${id}`);
   }
 }

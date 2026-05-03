@@ -5,6 +5,13 @@ export interface OrderItem {
   count: number;
   price: number;
   product: Product;
+  _id: string;
+}
+
+export interface ShippingAddress {
+  details: string;
+  phone: string;
+  city: string;
 }
 
 export interface Order {
@@ -12,14 +19,15 @@ export interface Order {
   user: string;
   cartItems: OrderItem[];
   totalOrderPrice: number;
+  shippingPrice: number;
+  taxPrice: number;
   paymentMethodType: 'cash' | 'card';
   isPaid: boolean;
+  paidAt?: string;
   isDelivered: boolean;
-  shippingAddress: {
-    details: string;
-    phone: string;
-    city: string;
-  };
+  deliveredAt?: string;
+  shippingAddress: ShippingAddress;
   createdAt: string;
-  // TODO: Mostafa Shanab — extend per API response
+  updatedAt: string;
+  id: string;
 }
