@@ -1,2 +1,40 @@
 <!-- Owner: Youssef — feature: products/details -->
-<p>product-details works!</p>
+<div class="p-8 bg-white min-h-screen">
+
+  @if (isLoading()) {
+    <div class="h-96 bg-gray-100 animate-pulse rounded-xl"></div>
+  }
+
+  @if (!isLoading() && product()) {
+    <div class="grid md:grid-cols-2 gap-8">
+
+      <img
+        [src]="product()!.imageCover"
+        class="w-full rounded-xl object-cover"
+      />
+
+      <div>
+        <h1 class="text-3xl font-bold mb-2">
+          {{ product()!.title }}
+        </h1>
+
+        <p class="text-gray-600 mb-4">
+          {{ product()!.description }}
+        </p>
+
+        <p class="text-xl font-semibold mb-2">
+          {{ product()!.price }} EGP
+        </p>
+
+        <p class="text-sm text-gray-500">
+          Rating: {{ product()!.ratingsAverage }} ⭐
+        </p>
+
+        <p class="text-sm text-gray-500">
+          Sold: {{ product()!.sold }}
+        </p>
+      </div>
+
+    </div>
+  }
+</div>
