@@ -1,132 +1,63 @@
-<div class="flex flex-col lg:flex-row gap-6 p-4">
+<!-- Owner: Gaber — feature: cart/cart-page -->
+<section class="cart-page">
+  <header class="cart-page__head reveal">
+    <span class="eyebrow">Bag</span>
+    <h1 class="display-1">Your bag.</h1>
+  </header>
 
-
-
-
-    <div class="w-full lg:w-[70%] relative overflow-x-auto bg-white shadow rounded-lg border border-gray-200">
-
-        <table class="w-full text-sm text-left text-gray-700">
-
-
-            <thead class="text-sm bg-gray-100 border-b border-gray-200 text-gray-600">
-                <tr>
-                    <th class="px-4 py-3"></th>
-                    <th class="px-6 py-3 font-medium">Product</th>
-                    <th class="px-6 py-3 font-medium">Qty</th>
-                    <th class="px-6 py-3 font-medium">Price</th>
-                </tr>
-            </thead>
-
-
-            <tbody>
-
-                @if (cartInfo?.data?.products?.length) {
-
-                @for (item of cartInfo?.data?.products; track item.product._id) {
-
-                <tr class="border-b hover:bg-gray-50">
-
-
-                    <td class="p-4">
-                        <img [src]="item.product.images?.[0] || item.product.imageCover"
-                            class="w-16 md:w-20 object-cover" />
-                    </td>
-
-
-                    <td class="px-6 py-4 font-semibold text-gray-900">
-                        <p>{{ item.product.title }}</p>
-
-                        <button (click)="removeItem(item.product._id)" [disabled]="updatingItems[item.product._id]"
-                            class="text-red-600 hover:underline text-sm mt-1 disabled:opacity-50">
-                            Remove
-                        </button>
-                    </td>
-
-                    <td class="px-6 py-4">
-                        <div class="flex items-center gap-2">
-
-                            <button (click)="updateProduct(item.product._id, item.count - 1)"
-                                [disabled]="item.count <= 1 || updatingItems[item.product._id]"
-                                class="w-7 h-7 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-200 disabled:opacity-50">
-                                -
-                            </button>
-
-                            <span class="w-6 text-center">
-                                @if (updatingItems[item.product._id]) {
-                                <span class="animate-pulse">...</span>
-                                } @else {
-                                {{ item.count }}
-                                }
-                            </span>
-
-                            <button (click)="updateProduct(item.product._id, item.count + 1)"
-                                [disabled]="updatingItems[item.product._id]"
-                                class="w-7 h-7 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-200 disabled:opacity-50">
-                                +
-                            </button>
-
-                        </div>
-                    </td>
-
-                    <!-- Price -->
-                    <td class="px-6 py-4 font-semibold text-gray-900">
-                        {{ item.price | currencyFormat }}
-                    </td>
-
-                </tr>
-
-                }
-
-                } @else {
-
-                <tr>
-                    <td colspan="4" class="text-center py-10 text-gray-500">
-                        Your cart is empty 🛒
-                    </td>
-                </tr>
-
-                }
-
-            </tbody>
-
-        </table>
+  <div class="cart-grid">
+    <div class="cart-list">
+      @if (cartInfo?.data?.products?.length) {
+        @for (item of cartInfo?.data?.products; track item.product._id) {
+          <div class="cart-row">
+            <a [routerLink]="['/products', item.product._id]" class="cart-row__media">
+              <img [src]="item.product.images?.[0] || item.product.imageCover" [alt]="item.product.title" />
+            </a>
+            <div class="cart-row__body">
+              <a [routerLink]="['/products', item.product._id]" class="cart-row__name">{{ item.product.title }}</a>
+              <span class="cart-row__price">{{ item.price | currencyFormat }}</span>
+              <div class="cart-row__controls">
+                <div class="qty">
+                  <button type="button" class="qty__btn" (click)="updateProduct(item.product._id, item.count - 1)" [disabled]="item.count <= 1 || updatingItems[item.product._id]" aria-label="Decrease quantity">−</button>
+                  <span class="qty__value">
+                    @if (updatingItems[item.product._id]) { … } @else { {{ item.count }} }
+                  </span>
+                  <button type="button" class="qty__btn" (click)="updateProduct(item.product._id, item.count + 1)" [disabled]="updatingItems[item.product._id]" aria-label="Increase quantity">+</button>
+                </div>
+                <button type="button" class="btn-link cart-row__remove" (click)="removeItem(item.product._id)" [disabled]="updatingItems[item.product._id]">Remove</button>
+              </div>
+            </div>
+          </div>
+        }
+      } @else {
+        <div class="placeholder">
+          <h3>Your bag is empty</h3>
+          <p>Wander the edit and add a few considered objects.</p>
+          <a routerLink="/products" class="btn-primary">Start shopping</a>
+        </div>
+      }
     </div>
 
+    @if (cartInfo?.data?.products?.length) {
+      <aside class="cart-summary">
+        <span class="eyebrow">Order summary</span>
 
-
-
-    <div class="w-full lg:w-[30%] bg-white shadow rounded-lg border border-gray-200 p-5 h-fit">
-
-        <h2 class="text-lg font-semibold mb-4">Order Summary</h2>
-
-
-        <div class="flex justify-between mb-2 text-gray-700">
-            <span>Items</span>
-            <span>{{ cartInfo?.numOfCartItems || 0 }}</span>
+        <div class="cart-summary__row">
+          <span>Items</span>
+          <span>{{ cartInfo?.numOfCartItems || 0 }}</span>
+        </div>
+        <div class="cart-summary__row cart-summary__row--total">
+          <span>Total</span>
+          <span class="cart-summary__total">{{ cartInfo?.data?.totalCartPrice | currencyFormat }}</span>
         </div>
 
-
-        <div class="flex justify-between mb-4 text-gray-900 font-semibold text-lg">
-            <span>Total</span>
-            <span>{{ cartInfo?.data?.totalCartPrice | currencyFormat }}</span>
-        </div>
-
-
-        <div class="border-t my-4"></div>
-
-        <button routerLink="/checkout" [disabled]="!cartInfo?.data?.totalCartPrice"
-            class="w-full bg-[#D66D77] text-white py-2 rounded hover:bg-red-600 transition disabled:opacity-50 disabled:cursor-not-allowed">
-
-            Proceed to Checkout
-
+        <button type="button" class="btn-primary btn--block btn--lg" routerLink="/checkout" [disabled]="!cartInfo?.data?.totalCartPrice">
+          Checkout
         </button>
-        <button (click)="clearCart()" [disabled]="isClearing || !cartInfo?.data?.totalCartPrice"
-            class="w-full mt-3 border border-red-500 text-red-500 py-2 rounded hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed">
-
-            {{ isClearing ? 'Clearing...' : 'Clear Cart' }}
-
+        <button type="button" class="btn-link cart-summary__clear" (click)="clearCart()" [disabled]="isClearing || !cartInfo?.data?.totalCartPrice">
+          {{ isClearing ? 'Clearing…' : 'Clear bag' }}
         </button>
-
-    </div>
-
-</div>
+      </aside>
+    }
+  </div>
+</section>

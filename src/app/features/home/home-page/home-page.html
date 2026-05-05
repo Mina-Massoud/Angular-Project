@@ -1,0 +1,107 @@
+<!-- Owner: Mina — feature: home/page -->
+<section class="relative w-full min-h-[70dvh] overflow-hidden bg-paper-2 home-hero">
+  <div class="absolute inset-0 z-0 h-[70dvh]">
+    <img [src]="heroImage" alt="Studio hero" id="hero-image"
+      class="hero-img w-full h-full object-cover object-[center_20%] opacity-90" />
+  </div>
+  <div
+    class="absolute inset-x-0 bottom-0 top-[40%] bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 pointer-events-none">
+  </div>
+  <div
+    class="absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-black/95 via-black/60 to-transparent z-10 pointer-events-none">
+  </div>
+  <div class="absolute bottom-12 left-6 md:bottom-16 md:left-12 z-20 max-w-lg">
+    <h1 class="text-5xl md:text-7xl font-sans font-light tracking-tighter text-paper leading-[0.9] mb-4">
+      Made to last.
+    </h1>
+    <p class="text-[10px] md:text-xs font-sans tracking-[0.2em] uppercase text-paper/80 mb-8 pl-1">
+      Quiet luxury for the everyday.
+    </p>
+    <a routerLink="/products"
+      class="inline-flex items-center justify-center bg-rose text-ink px-8 py-3.5 rounded-full text-xs font-semibold tracking-wide uppercase hover:scale-[0.98] transition-transform duration-300">
+      Shop the edit
+    </a>
+  </div>
+  <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 opacity-60">
+    <span class="block w-[1px] h-8 bg-gradient-to-b from-paper to-transparent"></span>
+    <span class="text-[9px] uppercase tracking-[0.2em] text-paper">Scroll</span>
+  </div>
+</section>
+
+<div class="h-12 w-full"></div>
+
+@if (categories().length) {
+<section class="px-6 md:px-12 w-full max-w-[2200px] mx-auto reveal">
+  <header class="home-section-head">
+    <span class="eyebrow">01 — Departments</span>
+    <h2 class="display-2 home-section-head__title">Shop by category.</h2>
+    <a routerLink="/categories" class="home-section-head__link">View all →</a>
+  </header>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+    @for (cat of categories(); track cat._id) {
+    <a [routerLink]="['/categories', cat._id]" class="group block cursor-pointer">
+      <div class="aspect-square w-full overflow-hidden bg-wash/30 relative">
+        <img [src]="cat.image" [alt]="cat.name"
+          class="w-full h-full object-cover transition-transform duration-[1500ms] group-hover:scale-105">
+      </div>
+      <div class="mt-4 text-center">
+        <span
+          class="text-[11px] font-sans tracking-[0.15em] uppercase text-ink group-hover:text-muted transition-colors">
+          {{ cat.name }}
+        </span>
+      </div>
+    </a>
+    }
+  </div>
+</section>
+
+<div class="h-32 md:h-48 w-full"></div>
+}
+
+@if (products().length) {
+<section class="px-6 md:px-12 w-full max-w-[2200px] mx-auto reveal stagger-2">
+  <header class="home-section-head">
+    <span class="eyebrow">02 — The edit</span>
+    <h2 class="display-2 home-section-head__title">New this week.</h2>
+    <a routerLink="/products" class="home-section-head__link">Shop all →</a>
+  </header>
+  <div class="catalog-grid catalog-grid--five">
+    @for (p of products(); track p._id; let i = $index) {
+    <app-product-card [product]="p" [showNewDot]="i === 0 || i === 5" />
+    }
+  </div>
+</section>
+}
+
+<div class="flex flex-col my-20 border border-gray-350 bg-gray-200">
+  <section class="py-20 px-6 w-full flex items-center justify-center reveal">
+    <h2
+      class="text-3xl md:text-5xl lg:text-6xl max-w-4xl text-center font-sans font-light tracking-tight leading-[1.1] text-ink">
+      Considered objects, <br class="hidden md:block" />made slowly.
+    </h2>
+  </section>
+
+  <section class="pt-4 pb-20 px-6 w-full max-w-xl mx-auto flex flex-col items-center reveal">
+    <label for="email"
+      class="text-[10px] font-sans font-medium uppercase tracking-[0.2em] text-muted mb-8 text-center block w-full">
+      Join the list
+    </label>
+    <form
+      class="w-full flex items-center border-b border-ink/20 pb-3 focus-within:border-ink transition-colors duration-300 group"
+      (submit)="onSubscribe($event)">
+      <input type="email" id="email" name="email" placeholder="Email address" [(ngModel)]="email"
+        [ngModelOptions]="{ standalone: true }"
+        class="w-full bg-transparent appearance-none border-none outline-none text-sm font-sans text-ink placeholder:text-muted/50 rounded-none" />
+      <button type="submit" aria-label="Submit"
+        class="ml-4 text-muted group-focus-within:text-ink transition-colors hover:translate-x-1 duration-300">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+          aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12" />
+          <polyline points="12 5 19 12 12 19" />
+        </svg>
+      </button>
+    </form>
+  </section>
+</div>
+
+<div class="h-12 w-full"></div>

@@ -1,1 +1,39 @@
 /* Owner: Ahmed Gabr — feature: wishlist/page */
+:host { display: block; background: var(--paper); }
+
+.wishlist-page {
+  width: 100%;
+  max-width: 2200px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 6rem;
+}
+@media (min-width: 768px) {
+  .wishlist-page { padding: 4rem 3rem 8rem; }
+}
+
+.wishlist-page__head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 4rem;
+  align-items: flex-start;
+}
+
+.card__title {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.wishlist__actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  font-size: 11px;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  flex-wrap: wrap;
+}
+.wishlist__remove { color: var(--muted); }
+.wishlist__remove:hover { color: var(--ink); }

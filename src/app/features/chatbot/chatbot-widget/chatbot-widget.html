@@ -1,2 +1,182 @@
 <!-- Owner: Mina — feature: chatbot/chatbot-widget -->
-<p>chatbot-widget works!</p>
+<button
+  type="button"
+  class="chatbot-fab"
+  [class.chatbot-fab--open]="isOpen()"
+  [attr.aria-expanded]="isOpen()"
+  [attr.aria-label]="isOpen() ? 'Close chat assistant' : 'Open chat assistant'"
+  (click)="toggle()"
+>
+  @if (isOpen()) {
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+      <path
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        d="M6 6l12 12M18 6L6 18"
+      />
+    </svg>
+  } @else {
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M12 3C6.48 3 2 6.85 2 11.6c0 2.42 1.16 4.6 3.04 6.15L4 22l4.6-2.13c1.06.27 2.18.42 3.4.42 5.52 0 10-3.85 10-8.6S17.52 3 12 3z"
+      />
+    </svg>
+    @if (hasUnread()) {
+      <span class="chatbot-fab__dot" aria-hidden="true"></span>
+    }
+  }
+</button>
+
+@if (isOpen()) {
+  <section
+    class="chatbot-panel"
+    role="dialog"
+    aria-label="FreshCart chat assistant"
+    aria-modal="false"
+  >
+    <header class="chatbot-panel__header">
+      <div class="chatbot-panel__title">
+        <span class="chatbot-panel__avatar" aria-hidden="true">FC</span>
+        <div>
+          <p class="chatbot-panel__name">FreshCart Assistant</p>
+          <p class="chatbot-panel__status">
+            @if (isTyping()) {
+              Typing…
+            } @else {
+              Online
+            }
+          </p>
+        </div>
+      </div>
+      <div class="chatbot-panel__actions">
+        @if (hasMessages()) {
+          <button
+            type="button"
+            class="chatbot-panel__icon-btn"
+            (click)="clear()"
+            aria-label="Clear conversation"
+            title="Clear conversation"
+          >
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              <path
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 6h18M8 6V4h8v2m-9 0v14a2 2 0 002 2h6a2 2 0 002-2V6"
+              />
+            </svg>
+          </button>
+        }
+        <button
+          type="button"
+          class="chatbot-panel__icon-btn"
+          (click)="close()"
+          aria-label="Close chat"
+        >
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <path
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              d="M6 6l12 12M18 6L6 18"
+            />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div #messageList class="chatbot-panel__messages" aria-live="polite">
+      @if (!hasMessages()) {
+        <div class="chatbot-empty">
+          <p class="chatbot-empty__title">Hi! How can I help you shop today?</p>
+          <p class="chatbot-empty__hint">Try one of these:</p>
+          <div class="chatbot-empty__suggestions">
+            @for (s of suggestions; track s) {
+              <button
+                type="button"
+                class="chatbot-suggestion"
+                (click)="sendSuggestion(s)"
+                [disabled]="!canSend()"
+              >
+                {{ s }}
+              </button>
+            }
+          </div>
+        </div>
+      }
+
+      @for (msg of messages(); track msg.ts) {
+        <div
+          class="chatbot-msg"
+          [class.chatbot-msg--user]="msg.role === 'user'"
+          [class.chatbot-msg--bot]="msg.role === 'model'"
+        >
+          <div class="chatbot-msg__bubble">
+            @for (seg of parseSegments(msg.content); track $index) {
+              @if (seg.kind === 'text') {
+                <span>{{ seg.text }}</span>
+              } @else if (seg.internal) {
+                <a
+                  [routerLink]="seg.href"
+                  (click)="onLinkClick($event, seg.href!, true)"
+                  class="chatbot-link"
+                  >{{ seg.text }}</a
+                >
+              } @else {
+                <a
+                  [href]="seg.href"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="chatbot-link"
+                  >{{ seg.text }}</a
+                >
+              }
+            }
+          </div>
+        </div>
+      }
+
+      @if (isTyping()) {
+        <div class="chatbot-msg chatbot-msg--bot">
+          <div class="chatbot-msg__bubble chatbot-msg__bubble--typing" aria-label="Assistant is typing">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      }
+    </div>
+
+    <form
+      class="chatbot-panel__input"
+      (ngSubmit)="send()"
+    >
+      <textarea
+        #inputArea
+        class="chatbot-input"
+        rows="1"
+        placeholder="Ask anything…"
+        [ngModel]="draft()"
+        (ngModelChange)="draft.set($event)"
+        (keydown)="onKeyDown($event)"
+        name="chatbot-draft"
+        maxlength="2000"
+        [disabled]="!canSend()"
+      ></textarea>
+      <button
+        type="submit"
+        class="chatbot-send"
+        [disabled]="!canSend() || !draft().trim()"
+        aria-label="Send message"
+      >
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path fill="currentColor" d="M3 11l18-8-8 18-2-8-8-2z" />
+        </svg>
+      </button>
+    </form>
+  </section>
+}

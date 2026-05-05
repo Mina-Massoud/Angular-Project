@@ -27,6 +27,7 @@ export class ForgotPassword {
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.toast.error('Enter a valid email address.');
       return;
     }
     this.submitting.set(true);

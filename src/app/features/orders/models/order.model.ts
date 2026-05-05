@@ -29,5 +29,4 @@ export interface Order {
   shippingAddress: ShippingAddress;
   createdAt: string;
   updatedAt: string;
-  id: string;
 }

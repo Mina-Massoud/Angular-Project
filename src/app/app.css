@@ -1,4 +1,18 @@
 /* Owner: Mina — root layout */
-.app-main {
-  min-height: calc(100vh - 8rem);
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 100vh;
+  background: var(--paper);
 }
+
+.app-main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+
+.app-main--inset { padding-top: 78px; }

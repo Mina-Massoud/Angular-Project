@@ -1,2 +1,108 @@
 <!-- Owner: Mina — feature: checkout/checkout-page -->
-<p>checkout-page works!</p>
+<section class="checkout-page">
+  <div class="app-container checkout-grid">
+    <header class="checkout-head reveal">
+      <span class="eyebrow">Checkout</span>
+      <h1 class="display-1">Place your order.</h1>
+      <p class="lede">Confirm your shipping address and choose how you'd like to pay.</p>
+    </header>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="checkout-form" novalidate>
+      <section class="checkout-section">
+        <h2 class="checkout-section__title">Shipping address</h2>
+
+        <label class="field">
+          <span class="field__label">Address details</span>
+          <input class="field__input" type="text" formControlName="details" autocomplete="street-address" placeholder="Street, building, apartment" />
+          @if (form.controls.details.invalid && form.controls.details.touched) {
+            <span class="field__error">Please enter your address.</span>
+          }
+        </label>
+
+        <div class="field-row">
+          <label class="field">
+            <span class="field__label">City</span>
+            <input class="field__input" type="text" formControlName="city" autocomplete="address-level2" />
+            @if (form.controls.city.invalid && form.controls.city.touched) {
+              <span class="field__error">Please enter your city.</span>
+            }
+          </label>
+
+          <label class="field">
+            <span class="field__label">Phone</span>
+            <input class="field__input" type="tel" formControlName="phone" autocomplete="tel" placeholder="+20…" />
+            @if (form.controls.phone.invalid && form.controls.phone.touched) {
+              <span class="field__error">Enter a valid phone number.</span>
+            }
+          </label>
+        </div>
+      </section>
+
+      <section class="checkout-section">
+        <h2 class="checkout-section__title">Payment method</h2>
+        <div class="pay-methods">
+          <button
+            type="button"
+            class="pay-method"
+            [class.pay-method--active]="paymentMethod() === 'cash'"
+            (click)="setMethod('cash')"
+          >
+            <span class="pay-method__title">Cash on delivery</span>
+            <span class="pay-method__hint">Pay in cash when your order arrives.</span>
+          </button>
+          <button
+            type="button"
+            class="pay-method"
+            [class.pay-method--active]="paymentMethod() === 'card'"
+            (click)="setMethod('card')"
+          >
+            <span class="pay-method__title">Pay online</span>
+            <span class="pay-method__hint">Secure card checkout via Stripe.</span>
+          </button>
+        </div>
+      </section>
+
+      <button type="submit" class="btn-primary btn--block btn--lg" [disabled]="submitting() || isEmpty()">
+        @if (submitting()) {
+          Placing order…
+        } @else if (paymentMethod() === 'card') {
+          Continue to payment
+        } @else {
+          Place order
+        }
+      </button>
+
+      <a routerLink="/cart" class="btn-link checkout-form__back">Back to cart</a>
+    </form>
+
+    <aside class="checkout-summary">
+      <span class="eyebrow">Order summary</span>
+
+      @if (cart()?.data?.products?.length) {
+        <ul class="checkout-summary__items">
+          @for (item of cart()?.data?.products; track item.product._id) {
+            <li class="checkout-summary__item">
+              <img [src]="item.product.images?.[0] || item.product.imageCover" [alt]="item.product.title" />
+              <div class="checkout-summary__item-body">
+                <span class="checkout-summary__item-title">{{ item.product.title }}</span>
+                <span class="checkout-summary__item-meta">Qty {{ item.count }}</span>
+              </div>
+              <span class="checkout-summary__item-price">{{ item.price * item.count | currencyFormat }}</span>
+            </li>
+          }
+        </ul>
+
+        <div class="checkout-summary__row">
+          <span>Items</span>
+          <span>{{ cart()?.numOfCartItems || 0 }}</span>
+        </div>
+        <div class="checkout-summary__row checkout-summary__row--total">
+          <span>Total</span>
+          <span class="checkout-summary__total">{{ cart()?.data?.totalCartPrice | currencyFormat }}</span>
+        </div>
+      } @else {
+        <p class="checkout-summary__empty">Your bag is empty.</p>
+      }
+    </aside>
+  </div>
+</section>

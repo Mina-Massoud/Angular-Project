@@ -1,7 +1,7 @@
 // Owner: Mina — feature: auth/sign-in
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
 
@@ -16,6 +16,7 @@ export class SignIn {
   private readonly fb = inject(FormBuilder);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly toast = inject(ToastService);
 
   readonly submitting = signal(false);
@@ -28,13 +29,19 @@ export class SignIn {
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      const c = this.form.controls;
+      const msg = c.email.invalid
+        ? 'Enter a valid email address.'
+        : 'Password must be at least 6 characters.';
+      this.toast.error(msg);
       return;
     }
     this.submitting.set(true);
     this.auth.signIn(this.form.getRawValue()).subscribe({
       next: () => {
         this.toast.success('Welcome back');
-        this.router.navigate(['/']);
+        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+        this.router.navigateByUrl(returnUrl && returnUrl.startsWith('/') ? returnUrl : '/');
       },
       error: () => this.submitting.set(false),
       complete: () => this.submitting.set(false),

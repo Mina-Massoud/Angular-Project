@@ -1,0 +1,43 @@
+/* Owner: Mina — feature: home/page */
+:host { display: block; }
+.home-hero { isolation: isolate; }
+
+.home-section-head {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+  align-items: end;
+  padding-bottom: 2.5rem;
+  margin-bottom: 3rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+@media (min-width: 768px) {
+  .home-section-head {
+    grid-template-columns: auto 1fr auto;
+    gap: 2rem;
+    padding-bottom: 2rem;
+    margin-bottom: 4rem;
+  }
+}
+
+.home-section-head__title {
+  letter-spacing: var(--tracking-tight);
+  margin: 0;
+}
+@media (min-width: 768px) {
+  .home-section-head__title { justify-self: start; }
+}
+
+.home-section-head__link {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color var(--dur-2) var(--ease);
+  justify-self: start;
+}
+@media (min-width: 768px) {
+  .home-section-head__link { justify-self: end; }
+}
+.home-section-head__link:hover { color: var(--ink); }

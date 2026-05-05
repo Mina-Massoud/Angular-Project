@@ -1,148 +1,85 @@
 <!-- Owner: Mostafa Shanab — feature: shared/navbar -->
+<header
+  class="nav"
+  [class.nav--over-hero]="isOnHome() && !isScrolled()"
+  [class.nav--scrolled]="!isOnHome() || isScrolled()"
+>
+  <div class="nav__row">
+    <div class="nav__col nav__col--left">
+      <a routerLink="/" class="nav__logo" aria-label="Studio home">Studio</a>
+    </div>
 
-<header class="navbar-wrapper">
-  <!-- Top Bar -->
-  <div class="navbar-top">
-    <div class="container">
-      <!-- Logo -->
-      <a routerLink="/" class="logo">
-        <span>🛍️</span>
-        <span>SMART <strong>SHOP</strong></span>
+    <nav class="nav__links" aria-label="Primary">
+      @for (link of navLinks; track link.path) {
+        <a [routerLink]="link.path" routerLinkActive="is-active" class="nav__link">{{ link.label }}</a>
+      }
+    </nav>
+
+    <div class="nav__col nav__col--right">
+      <a routerLink="/wishlist" class="nav__icon-btn" aria-label="Wishlist">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+        </svg>
+        @if (wishlistCount() > 0) { <span class="nav__count">({{ wishlistCount() }})</span> }
       </a>
 
-      <!-- Search -->
-      <div class="search-bar">
-        <input type="text" placeholder="Search products..." aria-label="Search products" />
-        <button type="button" aria-label="Search">
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            aria-hidden="true"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.35-4.35" />
-          </svg>
+      <button type="button" class="nav__icon-btn" aria-label="Bag" (click)="openCart()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <path d="M16 10a4 4 0 0 1-8 0" />
+        </svg>
+        @if (cartCount() > 0) { <span class="nav__count">({{ cartCount() }})</span> }
+      </button>
+
+      <div class="nav__user">
+        <button
+          class="nav__user-btn"
+          type="button"
+          aria-haspopup="menu"
+          aria-controls="user-menu"
+          [attr.aria-expanded]="isUserMenuOpen()"
+          (click)="toggleUserMenu()"
+        >
+          <span class="nav__avatar" aria-hidden="true">{{ currentUser()?.name?.[0] ?? 'U' }}</span>
+          <span class="nav__user-name">{{ currentUser()?.name ?? 'Guest' }}</span>
         </button>
+
+        @if (isUserMenuOpen()) {
+          <div class="nav__menu" id="user-menu" role="menu">
+            @if (currentUser()) {
+              <a routerLink="/profile" role="menuitem" class="nav__menu-item">My profile</a>
+              <a routerLink="/orders" role="menuitem" class="nav__menu-item">My orders</a>
+              <a routerLink="/wishlist" role="menuitem" class="nav__menu-item">Wishlist</a>
+              <hr>
+              <button type="button" role="menuitem" class="nav__menu-item nav__menu-item--danger" (click)="signOut()">Sign out</button>
+            } @else {
+              <a routerLink="/auth/sign-in" role="menuitem" class="nav__menu-item">Sign in</a>
+              <a routerLink="/auth/sign-up" role="menuitem" class="nav__menu-item">Create account</a>
+            }
+          </div>
+        }
       </div>
 
-      <!-- Actions -->
-      <div class="actions">
-        <!-- Wishlist -->
-        <a routerLink="/wishlist" class="icon-btn" aria-label="Wishlist">
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            aria-hidden="true"
-          >
-            <path
-              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-            />
-          </svg>
-          @if (wishlistCount() > 0) {
-            <span class="badge" aria-label="{{ wishlistCount() }} items">{{
-              wishlistCount()
-            }}</span>
-          }
-        </a>
-
-        <!-- Cart -->
-        <a routerLink="/cart" class="icon-btn cart" aria-label="Cart">
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            aria-hidden="true"
-          >
-            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <path d="M16 10a4 4 0 0 1-8 0" />
-          </svg>
-          <span>BAG</span>
-          @if (cartCount() > 0) {
-            <span class="badge" aria-label="{{ cartCount() }} items">{{ cartCount() }}</span>
-          }
-        </a>
-
-        <!-- User -->
-        <div class="user-wrap">
-          <button
-            class="user-btn"
-            type="button"
-            aria-haspopup="menu"
-            aria-controls="user-menu"
-            [attr.aria-expanded]="isUserMenuOpen()"
-            (click)="toggleUserMenu()"
-          >
-            <div class="avatar" aria-hidden="true">{{ currentUser()?.name?.[0] ?? 'U' }}</div>
-            <span>{{ currentUser()?.name ?? 'Guest' }}</span>
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-              aria-hidden="true"
-            >
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
-          </button>
-
-          @if (isUserMenuOpen()) {
-            <div class="dropdown" id="user-menu" role="menu">
-              <a
-                routerLink="/profile"
-                role="menuitem"
-                class="drop-item"
-                (click)="isUserMenuOpen.set(false)"
-                >My Profile</a
-              >
-              <a
-                routerLink="/orders"
-                role="menuitem"
-                class="drop-item"
-                (click)="isUserMenuOpen.set(false)"
-                >My Orders</a
-              >
-              <a
-                routerLink="/wishlist"
-                role="menuitem"
-                class="drop-item"
-                (click)="isUserMenuOpen.set(false)"
-                >Wishlist</a
-              >
-              <hr />
-              <button type="button" role="menuitem" class="drop-item danger" (click)="signOut()">
-                Sign Out
-              </button>
-            </div>
-          }
-        </div>
-      </div>
+      <button class="nav__burger" type="button" aria-label="Menu" (click)="toggleMobileMenu()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <line x1="3" y1="6"  x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
     </div>
   </div>
 
-  <!-- Nav Links -->
-  <nav class="navbar-nav">
-    <div class="container">
-      <ul>
-        @for (link of navLinks; track link.path) {
-          <li>
-            <a [routerLink]="link.path" routerLinkActive="active">{{ link.label }}</a>
-          </li>
-        }
-      </ul>
+  @if (isMobileMenuOpen()) {
+    <div class="nav__drawer" role="menu">
+      @for (link of navLinks; track link.path) {
+        <a [routerLink]="link.path" class="nav__drawer-link" (click)="isMobileMenuOpen.set(false)">{{ link.label }}</a>
+      }
+      <hr>
+      <a routerLink="/profile" class="nav__drawer-link" (click)="isMobileMenuOpen.set(false)">My profile</a>
+      <a routerLink="/wishlist" class="nav__drawer-link" (click)="isMobileMenuOpen.set(false)">Wishlist</a>
+      <a routerLink="/cart" class="nav__drawer-link" (click)="isMobileMenuOpen.set(false)">Bag</a>
     </div>
-  </nav>
+  }
 </header>

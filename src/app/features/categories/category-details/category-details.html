@@ -1,2 +1,68 @@
 <!-- Owner: Noura — feature: categories/details -->
-<p>category-details works!</p>
+<section class="cat-detail">
+  @if (isLoading()) {
+    <div class="cat-detail__hero cat-detail__hero--skeleton"></div>
+  }
+
+  @if (!isLoading() && hasError()) {
+    <div class="placeholder">
+      <h3>Couldn't load this category.</h3>
+      <a routerLink="/categories" class="btn-ghost">Back to categories</a>
+    </div>
+  }
+
+  @if (!isLoading() && !hasError() && category(); as c) {
+    <div class="cat-detail__hero reveal">
+      <div class="cat-detail__hero-media">
+        <img [src]="c.image" [alt]="c.name" />
+      </div>
+      <div class="cat-detail__hero-body">
+        <span class="eyebrow">Department</span>
+        <h1 class="display-1 cat-detail__title">{{ c.name }}.</h1>
+        <p class="lede cat-detail__lede">
+          A considered selection across {{ c.name | lowercase }} — fresh drops every week.
+        </p>
+        <div class="cat-detail__meta">
+          <span>{{ resultsLabel() }}</span>
+          <span class="cat-detail__sep">·</span>
+          <a routerLink="/categories" class="cat-detail__back">All departments →</a>
+        </div>
+      </div>
+    </div>
+
+    <header class="cat-detail__section-head">
+      <span class="eyebrow">The edit</span>
+      <h2 class="display-2">Shop {{ c.name | lowercase }}.</h2>
+    </header>
+
+    @if (isLoadingProducts()) {
+      <div class="catalog-grid catalog-grid--five">
+        @for (s of skeletons; track $index) {
+          <div class="tile tile--skeleton"></div>
+        }
+      </div>
+    }
+
+    @if (!isLoadingProducts() && products().length > 0) {
+      <div class="catalog-grid catalog-grid--five reveal">
+        @for (p of products(); track p._id; let i = $index) {
+          <app-product-card [product]="p" [showNewDot]="i === 0 || i === 7" />
+        }
+      </div>
+
+      <app-pagination
+        [currentPage]="currentPage()"
+        [totalPages]="totalPages()"
+        (pageChange)="goToPage($event)"
+      />
+    }
+
+    @if (!isLoadingProducts() && products().length === 0) {
+      <div class="placeholder">
+        <h3>Nothing here yet.</h3>
+        <p>This department is being curated. Browse the rest of the edit in the meantime.</p>
+        <a routerLink="/products" class="btn-ghost">Shop all products</a>
+      </div>
+    }
+  }
+</section>

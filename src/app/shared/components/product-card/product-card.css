@@ -1,1 +1,16 @@
 /* Owner: Youssef — feature: shared/product-card */
+:host { display: block; }
+
+.product-card {
+  text-decoration: none;
+  color: inherit;
+}
+
+.card__title {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color var(--dur-2) var(--ease);
+}
+.product-card:hover .card__title { color: var(--muted); }

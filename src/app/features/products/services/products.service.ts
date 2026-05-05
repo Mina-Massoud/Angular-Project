@@ -22,9 +22,7 @@ export class ProductsService {
   private readonly baseUrl = environment.baseUrl;
 
   getAllProducts(page: number, limit: number): Observable<ProductsResponse> {
-    const params = new HttpParams()
-      .set('page', page)
-      .set('limit', limit);
+    const params = new HttpParams().set('page', page).set('limit', limit);
 
     return this.http.get<ProductsResponse>(`${this.baseUrl}/products`, { params });
   }
@@ -32,6 +30,21 @@ export class ProductsService {
   getProductById(id: string): Observable<Product> {
     return this.http
       .get<{ data: Product }>(`${this.baseUrl}/products/${id}`)
-      .pipe(map(res => res.data));
+      .pipe(map((res) => res.data));
+  }
+
+  getProductsByCategory(categoryId: string, page = 1, limit = 12): Observable<ProductsResponse> {
+    const params = new HttpParams()
+      .set('page', page)
+      .set('limit', limit)
+      .set('category[in]', categoryId);
+
+    return this.http.get<ProductsResponse>(`${this.baseUrl}/products`, { params });
+  }
+
+  getProductsByBrand(brandId: string, page = 1, limit = 12): Observable<ProductsResponse> {
+    const params = new HttpParams().set('page', page).set('limit', limit).set('brand[in]', brandId);
+
+    return this.http.get<ProductsResponse>(`${this.baseUrl}/products`, { params });
   }
 }

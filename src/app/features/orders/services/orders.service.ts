@@ -9,15 +9,14 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { Order, ShippingAddress } from '../models/order.model';
 
-// export interface ShippingAddress {
-//   details: string;
-//   phone: string;
-//   city: string;
-// }
+export interface CheckoutSessionResponse {
+  status: string;
+  session: { url: string };
+}
 
 @Injectable({ providedIn: 'root' })
 export class OrdersService {
@@ -32,10 +31,9 @@ export class OrdersService {
     cartId: string,
     shippingAddress: ShippingAddress,
     successUrl: string,
-  ): Observable<any> {
-    return this.http.post<any>(`${this.base}/orders/checkout-session/${cartId}?url=${successUrl}`, {
-      shippingAddress,
-    });
+  ): Observable<CheckoutSessionResponse> {
+    const url = `${this.base}/orders/checkout-session/${cartId}?url=${encodeURIComponent(successUrl)}`;
+    return this.http.post<CheckoutSessionResponse>(url, { shippingAddress });
   }
 
   getAllOrders(): Observable<Order[]> {
@@ -47,6 +45,6 @@ export class OrdersService {
   }
 
   getOrderById(id: string): Observable<Order> {
-    return this.http.get<Order>(`${this.base}/orders/${id}`);
+    return this.http.get<{ data: Order }>(`${this.base}/orders/${id}`).pipe(map((res) => res.data));
   }
 }

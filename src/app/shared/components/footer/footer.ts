@@ -12,20 +12,17 @@ import { RouterLink } from '@angular/router';
 export class Footer {
   year = new Date().getFullYear();
 
-  columns = [
-    {
-      heading: 'Shop',
-      links: ['New Arrivals', 'Best Sellers', 'Sale', 'Collections', 'Gift Cards'],
-    },
-    {
-      heading: 'Help',
-      links: ['FAQ', 'Shipping & Returns', 'Size Guide', 'Track Order', 'Contact Us'],
-    },
-    {
-      heading: 'Company',
-      links: ['About Us', 'Careers', 'Press', 'Store Locations', 'Sustainability'],
-    },
+  shopLinks = [
+    { label: 'New Arrivals', path: '/products' },
+    { label: 'All Products', path: '/products' },
+    { label: 'Categories', path: '/categories' },
+    { label: 'Brands', path: '/brands' },
   ];
 
-  payments = ['VISA', 'Mastercard', 'PayPal', 'Apple Pay', 'Stripe'];
+  accountLinks = [
+    { label: 'My Profile', path: '/profile' },
+    { label: 'My Orders', path: '/orders' },
+    { label: 'Wishlist', path: '/wishlist' },
+    { label: 'Bag', path: '/cart' },
+  ];
 }

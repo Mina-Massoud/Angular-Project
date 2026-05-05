@@ -1,1 +1,15 @@
 /* Owner: Mina — feature: checkout/payment-success */
+.payment-page { padding: var(--space-9) 0; }
+.payment-page__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  max-width: 720px;
+}
+.payment-page__actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-top: var(--space-4);
+}
