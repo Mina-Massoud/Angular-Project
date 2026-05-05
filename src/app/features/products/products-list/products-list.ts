@@ -3,13 +3,14 @@ import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angula
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { CurrencyFormatPipe } from '../../../shared/pipes/currency-format.pipe';
+import { Pagination } from '../../../shared/components/pagination/pagination';
 import { ProductsService } from '../services/products.service';
 import { Product } from '../models/product.model';
 
 @Component({
   selector: 'app-products-list',
   standalone: true,
-  imports: [CurrencyFormatPipe],
+  imports: [CurrencyFormatPipe, Pagination],
   templateUrl: './products-list.html',
   styleUrl: './products-list.css',
 })
@@ -25,10 +26,11 @@ export class ProductsList implements OnInit {
   currentPage = signal(1);
   totalPages = signal(0);
 
-  readonly limit = 8;
-  readonly skeletons = Array.from({ length: 8 });
+  readonly limit = 10;
+  readonly skeletons = Array.from({ length: 10 });
 
   pages = computed(() => Array.from({ length: this.totalPages() }, (_, i) => i + 1));
+  pageLabel = computed(() => this.currentPage().toString().padStart(2, '0'));
 
   ngOnInit(): void {
     this.loadProducts();
@@ -66,5 +68,9 @@ export class ProductsList implements OnInit {
 
   openDetails(id: string): void {
     this.router.navigate(['/products', id]);
+  }
+
+  tileLabel(i: number): string {
+    return ((this.currentPage() - 1) * this.limit + i + 1).toString().padStart(3, '0');
   }
 }

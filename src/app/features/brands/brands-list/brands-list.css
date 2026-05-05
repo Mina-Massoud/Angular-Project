@@ -1,10 +1,107 @@
-/* brands-list.component.css */
+/* Owner: Noura — feature: brands/list */
+:host { display: block; background: var(--paper); }
 
-@keyframes brandIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+.brands-page {
+  width: 100%;
+  max-width: 2200px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 6rem;
+}
+@media (min-width: 768px) {
+  .brands-page { padding: 4rem 3rem 8rem; }
 }
 
-.group {
-  animation: brandIn 0.3s ease both;
+.brands-page__head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 3rem;
+  align-items: flex-start;
+  max-width: 640px;
+}
+
+.brands-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+}
+.brands-toolbar__search { max-width: 360px; }
+.brands-toolbar__alpha {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+.alpha {
+  background: none;
+  border: 0;
+  padding: 0.4rem 0.6rem;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color var(--dur-2) var(--ease);
+  font-family: var(--font-display);
+}
+.alpha:hover { color: var(--ink); }
+.alpha.is-active {
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink);
+  border-radius: 0;
+}
+
+.brands-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  row-gap: 3rem;
+}
+@media (min-width: 768px) {
+  .brands-grid { grid-template-columns: repeat(4, 1fr); gap: 2rem; row-gap: 4rem; }
+}
+@media (min-width: 1280px) { .brands-grid { grid-template-columns: repeat(6, 1fr); } }
+
+.brand-tile {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+.brand-tile__media {
+  aspect-ratio: 1 / 1;
+  background: var(--wash);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+.brand-tile__media img {
+  max-width: 80%;
+  max-height: 80%;
+  object-fit: contain;
+  transition: transform 0.7s var(--ease);
+}
+.brand-tile:hover .brand-tile__media img { transform: scale(1.05); }
+.brand-tile__name {
+  margin: 1rem 0 0;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink);
+  transition: color var(--dur-2) var(--ease);
+}
+.brand-tile:hover .brand-tile__name { color: var(--muted); }
+
+.brand-tile--skeleton {
+  aspect-ratio: 1 / 1;
+  background: var(--paper-2);
+  animation: shimmer 1.4s ease-in-out infinite;
+  background-image: linear-gradient(90deg, var(--paper-2) 25%, var(--paper-3) 50%, var(--paper-2) 75%);
+  background-size: 200% 100%;
 }

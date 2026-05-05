@@ -1,0 +1,69 @@
+<!-- Owner: Mina — feature: cart/cart-sheet -->
+<div class="sheet" [class.is-open]="isOpen()" [attr.aria-hidden]="!isOpen()">
+  <button type="button" class="sheet__overlay" aria-label="Close cart" (click)="close()"></button>
+
+  <aside class="sheet__panel" role="dialog" aria-modal="true" aria-label="Shopping bag">
+    <header class="sheet__head">
+      <span class="eyebrow">Bag <span class="sheet__count">{{ count() }}</span></span>
+      <button type="button" class="sheet__close" aria-label="Close" (click)="close()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6"  y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </header>
+
+    <div class="sheet__body">
+      @if (items().length === 0) {
+        <div class="sheet__empty">
+          <p class="sheet__empty-title">Your bag is empty</p>
+          <p class="sheet__empty-sub">Wander the edit and add a few considered objects.</p>
+          <a routerLink="/products" class="btn-primary btn--block" (click)="close()">Start shopping</a>
+        </div>
+      } @else {
+        <ul class="sheet__list">
+          @for (item of items(); track item.product._id) {
+            <li class="sheet__row">
+              <a [routerLink]="['/products', item.product._id]" class="sheet__media" (click)="close()">
+                <img [src]="item.product.images?.[0] || item.product.imageCover" [alt]="item.product.title" />
+              </a>
+              <div class="sheet__info">
+                <a [routerLink]="['/products', item.product._id]" class="sheet__name" (click)="close()">
+                  {{ item.product.title }}
+                </a>
+                <span class="sheet__price">{{ item.price | currencyFormat }}</span>
+                <div class="sheet__controls">
+                  <div class="qty">
+                    <button type="button" class="qty__btn"
+                      (click)="dec(item.product._id, item.count)"
+                      [disabled]="item.count <= 1 || updating[item.product._id]"
+                      aria-label="Decrease">−</button>
+                    <span class="qty__value">{{ item.count }}</span>
+                    <button type="button" class="qty__btn"
+                      (click)="inc(item.product._id, item.count)"
+                      [disabled]="updating[item.product._id]"
+                      aria-label="Increase">+</button>
+                  </div>
+                  <button type="button" class="btn-link sheet__remove"
+                    (click)="remove(item.product._id)"
+                    [disabled]="updating[item.product._id]">Remove</button>
+                </div>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+
+    @if (items().length > 0) {
+      <footer class="sheet__foot">
+        <div class="sheet__total">
+          <span>Subtotal</span>
+          <span class="sheet__total-amount">{{ total() | currencyFormat }}</span>
+        </div>
+        <a routerLink="/cart" class="btn-ghost btn--block" (click)="close()">View bag</a>
+        <a routerLink="/checkout" class="btn-primary btn--block btn--lg" (click)="close()">Checkout</a>
+      </footer>
+    }
+  </aside>
+</div>

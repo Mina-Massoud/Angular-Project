@@ -1,1 +1,96 @@
 /* Owner: Noura — feature: brands/details */
+:host { display: block; background: var(--paper); }
+
+.brand-detail {
+  width: 100%;
+  max-width: 2200px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 6rem;
+}
+@media (min-width: 768px) {
+  .brand-detail { padding: 4rem 3rem 8rem; }
+}
+
+.brand-detail__hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+@media (min-width: 1024px) {
+  .brand-detail__hero {
+    grid-template-columns: 1.1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    margin-bottom: 5rem;
+  }
+}
+
+.brand-detail__hero-media {
+  height: 280px;
+  background: var(--wash);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+@media (min-width: 768px)  { .brand-detail__hero-media { height: 360px; padding: 3rem; } }
+@media (min-width: 1024px) { .brand-detail__hero-media { height: 440px; padding: 4rem; } }
+.brand-detail__hero-media img {
+  max-width: 70%;
+  max-height: 70%;
+  object-fit: contain;
+  transition: transform 1.5s var(--ease);
+}
+.brand-detail__hero:hover .brand-detail__hero-media img { transform: scale(1.04); }
+
+.brand-detail__hero-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: flex-start;
+  max-width: 520px;
+}
+
+.brand-detail__title {
+  letter-spacing: var(--tracking-tight);
+  margin: 0;
+}
+.brand-detail__lede { color: var(--muted); }
+
+.brand-detail__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  font-size: 11px;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.brand-detail__sep { opacity: 0.5; }
+.brand-detail__back {
+  color: var(--ink);
+  transition: opacity var(--dur-2) var(--ease);
+}
+.brand-detail__back:hover { opacity: 0.6; }
+
+.brand-detail__hero--skeleton {
+  height: 280px;
+  background: var(--paper-2);
+  animation: shimmer 1.4s ease-in-out infinite;
+  background-image: linear-gradient(90deg, var(--paper-2) 25%, var(--paper-3) 50%, var(--paper-2) 75%);
+  background-size: 200% 100%;
+  margin-bottom: 5rem;
+}
+
+.brand-detail__section-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+  padding-bottom: 2rem;
+  margin-bottom: 4rem;
+  border-bottom: 1px solid var(--line-soft);
+}

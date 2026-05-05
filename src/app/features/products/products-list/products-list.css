@@ -1,9 +1,49 @@
 /* Owner: Youssef — feature: products/list */
-.product-card {
-  animation: fadeIn 0.3s ease both;
+:host {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  background: var(--paper);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.products-page {
+  width: 100%;
+  max-width: 2200px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem 6rem;
 }
+@media (min-width: 768px) {
+  .products-page { padding: 6rem 3rem 8rem; }
+}
+
+.products-page__head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
+  max-width: 640px;
+  margin-bottom: 4rem;
+}
+@media (min-width: 768px) {
+  .products-page__head { margin-bottom: 6rem; }
+}
+
+.products-page__title { max-width: 14ch; }
+
+.products-page__content { width: 100%; }
+
+.product-card {
+  text-decoration: none;
+  color: inherit;
+  outline: none;
+}
+.product-card:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
+
+.card__title {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color var(--dur-2) var(--ease);
+}
+.product-card:hover .card__title { color: var(--muted); }

@@ -1,34 +1,77 @@
 <!-- Owner: Youssef — feature: products/details -->
-<div class="p-8 bg-white min-h-screen">
+<section class="pd">
   @if (isLoading()) {
-    <div class="h-96 bg-gray-100 animate-pulse rounded-xl"></div>
+    <div class="pd__skeleton">
+      <div class="pd__skeleton-img"></div>
+      <div class="pd__skeleton-body">
+        <div></div><div></div><div></div>
+      </div>
+    </div>
   }
 
   @if (!isLoading() && hasError()) {
-    <p class="text-center text-gray-500">Failed to load product.</p>
+    <div class="placeholder"><h3>Failed to load product.</h3></div>
   }
 
   @if (!isLoading() && product(); as p) {
-    <div class="grid md:grid-cols-2 gap-8">
-      <img [src]="p.imageCover" [alt]="p.title" class="w-full rounded-xl object-cover" />
+    <a routerLink="/products" class="pd__back">← Back to shop</a>
 
-      <div>
-        <h1 class="text-3xl font-bold mb-2">{{ p.title }}</h1>
-
-        @if (p.description) {
-          <p class="text-gray-600 mb-4">{{ p.description }}</p>
+    <div class="pd__grid reveal">
+      <div class="pd__media">
+        <div class="pd__main-img">
+          <img [src]="activeImage() ?? p.imageCover" [alt]="p.title" />
+        </div>
+        @if (p.images && p.images.length > 0) {
+          <div class="pd__thumbs">
+            <button type="button" class="pd__thumb" [class.is-active]="activeImage() === p.imageCover" (click)="setActiveImage(p.imageCover)">
+              <img [src]="p.imageCover" [alt]="p.title + ' cover'" />
+            </button>
+            @for (img of p.images; track img) {
+              <button type="button" class="pd__thumb" [class.is-active]="activeImage() === img" (click)="setActiveImage(img)">
+                <img [src]="img" [alt]="p.title + ' detail'" />
+              </button>
+            }
+          </div>
         }
+      </div>
 
-        <p class="text-xl font-semibold mb-2">{{ p.price | currencyFormat }}</p>
+      <div class="pd__info">
+        @if (p.brand?.name) {
+          <span class="eyebrow">{{ p.brand?.name }}</span>
+        }
+        <h1 class="display-2 pd__title">{{ p.title }}</h1>
+
+        <p class="pd__price">{{ p.price | currencyFormat }}</p>
 
         @if (p.ratingsAverage != null) {
-          <p class="text-sm text-gray-500">Rating: {{ p.ratingsAverage }} ⭐</p>
+          <div class="pd__rating">
+            <span class="pd__star">★</span>
+            <span class="pd__rating-value">{{ p.ratingsAverage }}</span>
+            @if (p.sold != null) {
+              <span class="pd__dot">·</span>
+              <span class="pd__sold">{{ p.sold }} sold</span>
+            }
+          </div>
         }
 
-        @if (p.sold != null) {
-          <p class="text-sm text-gray-500">Sold: {{ p.sold }}</p>
+        @if (p.description) {
+          <hr class="divider divider--soft">
+          <p class="pd__desc">{{ p.description }}</p>
+        }
+
+        <div class="pd__actions">
+          <button class="btn-primary btn--block" type="button" (click)="addToCart()" [disabled]="isAddingToCart()">
+            @if (isAddingToCart()) { Adding... } @else { Add to bag }
+          </button>
+          <button class="btn-ghost btn--block" type="button" (click)="addToWishlist()" [disabled]="isAddingToWishlist()">
+            @if (isAddingToWishlist()) { Saving... } @else { Save to wishlist }
+          </button>
+        </div>
+
+        @if (p.category?.name) {
+          <p class="pd__meta"><span>Category</span> {{ p.category?.name }}</p>
         }
       </div>
     </div>
   }
-</div>
+</section>

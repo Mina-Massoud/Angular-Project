@@ -1,1 +1,92 @@
 /* Owner: Noura — feature: categories/details */
+:host { display: block; background: var(--paper); }
+
+.cat-detail {
+  width: 100%;
+  max-width: 2200px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 6rem;
+}
+@media (min-width: 768px) {
+  .cat-detail { padding: 4rem 3rem 8rem; }
+}
+
+.cat-detail__hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+@media (min-width: 1024px) {
+  .cat-detail__hero {
+    grid-template-columns: 1.1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    margin-bottom: 5rem;
+  }
+}
+
+.cat-detail__hero-media {
+  height: 280px;
+  background: var(--wash);
+  overflow: hidden;
+}
+@media (min-width: 768px)  { .cat-detail__hero-media { height: 360px; } }
+@media (min-width: 1024px) { .cat-detail__hero-media { height: 440px; } }
+.cat-detail__hero-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 1.5s var(--ease);
+}
+.cat-detail__hero:hover .cat-detail__hero-media img { transform: scale(1.03); }
+
+.cat-detail__hero-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: flex-start;
+  max-width: 520px;
+}
+
+.cat-detail__title {
+  letter-spacing: var(--tracking-tight);
+  margin: 0;
+}
+.cat-detail__lede { color: var(--muted); }
+
+.cat-detail__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  font-size: 11px;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.cat-detail__sep { opacity: 0.5; }
+.cat-detail__back {
+  color: var(--ink);
+  transition: opacity var(--dur-2) var(--ease);
+}
+.cat-detail__back:hover { opacity: 0.6; }
+
+.cat-detail__hero--skeleton {
+  height: 280px;
+  background: var(--paper-2);
+  animation: shimmer 1.4s ease-in-out infinite;
+  background-image: linear-gradient(90deg, var(--paper-2) 25%, var(--paper-3) 50%, var(--paper-2) 75%);
+  background-size: 200% 100%;
+  margin-bottom: 5rem;
+}
+
+.cat-detail__section-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+  padding-bottom: 2rem;
+  margin-bottom: 4rem;
+  border-bottom: 1px solid var(--line-soft);
+}

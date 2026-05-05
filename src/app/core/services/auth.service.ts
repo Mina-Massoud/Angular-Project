@@ -33,6 +33,18 @@ export class AuthService {
 
   readonly currentUser = signal<User | null>(null);
 
+  constructor() {
+    // Rehydrate the current user from the stored JWT on app boot,
+    // otherwise pages like /orders see null and bail before hitting the API.
+    const token = this.getToken();
+    if (token) {
+      const decoded = decodeJwt(token);
+      if (decoded) {
+        this.currentUser.set(decoded as unknown as User);
+      }
+    }
+  }
+
   updateCurrentUser(user: User): void {
     this.currentUser.set(user);
   }
@@ -81,6 +93,28 @@ export class AuthService {
 
   private persist(res: AuthResponse): void {
     localStorage.setItem(TOKEN_KEY, res.token);
-    this.currentUser.set(res.user);
+    if (res.user) {
+      this.currentUser.set(res.user);
+    } else {
+      const decoded = decodeJwt(res.token);
+      if (decoded) this.currentUser.set(decoded as unknown as User);
+    }
+  }
+}
+
+function decodeJwt(token: string): Record<string, unknown> | null {
+  try {
+    const payload = token.split('.')[1];
+    if (!payload) return null;
+    const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+    const json = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join(''),
+    );
+    return JSON.parse(json);
+  } catch {
+    return null;
   }
 }

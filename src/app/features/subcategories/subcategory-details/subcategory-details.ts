@@ -1,10 +1,11 @@
 // Owner: Noura — feature: subcategories/details
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-subcategory-details',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './subcategory-details.html',
   styleUrl: './subcategory-details.css',
 })

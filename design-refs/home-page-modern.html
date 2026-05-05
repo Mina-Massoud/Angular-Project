@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curated Editorial Style | E-commerce</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#FAF6F1',
+                        charcoal: '#1F1B16',
+                        terracotta: '#C2552D',
+                        sage: '#7C8A6B',
+                        gold: '#D4AF37',
+                        'cream-dark': '#F0EAE1',
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"DM Sans"', 'sans-serif'],
+                    },
+                    transitionTimingFunction: {
+                        'expo': 'cubic-bezier(0.16, 1, 0.3, 1)',
+                        'spring': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                    },
+                    animation: {
+                        'marquee': 'marquee 40s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        body { background-color: #FAF6F1; color: #1F1B16; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #FAF6F1; }
+        ::-webkit-scrollbar-thumb { background: #1F1B16; border-radius: 4px; opacity: 0.5; }
+        .noise-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 9999; opacity: 0.35; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); mix-blend-mode: multiply; }
+        .nav-link { position: relative; display: inline-block; }
+        .nav-link::after { content: ''; position: absolute; width: 0; height: 1px; bottom: -2px; left: 0; background-color: currentColor; transition: width 0.3s ease-out; }
+        .nav-link:hover::after { width: 100%; }
+        .shadow-premium { box-shadow: 0 20px 40px -15px rgba(31, 27, 22, 0.08); }
+        .reveal { opacity: 0; transform: translateY(30px); transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 100ms; }
+        .reveal-delay-2 { transition-delay: 200ms; }
+        .reveal-delay-3 { transition-delay: 300ms; }
+        *:focus-visible { outline: 2px solid #C2552D; outline-offset: 4px; }
+    </style>
+</head>
+<body class="font-sans overflow-x-hidden selection:bg-terracotta/20 selection:text-charcoal relative">
+    <div class="noise-overlay"></div>
+
+    <header class="fixed top-0 w-full z-50 backdrop-blur-md bg-cream/80 border-b border-charcoal/5 transition-all duration-300" id="navbar">
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12 h-20 flex items-center justify-between">
+            <button class="md:hidden text-charcoal p-2 -ml-2" aria-label="Menu"><i class="ph ph-list text-2xl"></i></button>
+            <a href="#" class="font-serif text-3xl md:text-3xl font-medium tracking-tight text-charcoal flex-shrink-0 z-10 w-24 md:w-auto relative top-1">L'Édition</a>
+            <nav class="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+                <a href="#" class="nav-link text-sm font-medium tracking-wide uppercase text-charcoal/80 hover:text-charcoal">Shop</a>
+                <a href="#" class="nav-link text-sm font-medium tracking-wide uppercase text-charcoal/80 hover:text-charcoal">Categories</a>
+                <a href="#" class="nav-link text-sm font-medium tracking-wide uppercase text-charcoal/80 hover:text-charcoal">Brands</a>
+                <a href="#" class="nav-link text-sm font-medium tracking-wide uppercase text-terracotta">New In</a>
+                <a href="#" class="nav-link text-sm font-medium tracking-wide uppercase text-charcoal/80 hover:text-charcoal">Sale</a>
+            </nav>
+            <div class="flex items-center gap-4 md:gap-5">
+                <button class="text-charcoal/80 hover:text-charcoal transition-colors transform hover:scale-105" aria-label="Search"><i class="ph ph-magnifying-glass text-xl"></i></button>
+                <button class="hidden md:block text-charcoal/80 hover:text-charcoal transition-colors transform hover:scale-105" aria-label="Account"><i class="ph ph-user text-xl"></i></button>
+                <button class="hidden sm:block text-charcoal/80 hover:text-charcoal transition-colors transform hover:scale-105" aria-label="Wishlist"><i class="ph ph-heart text-xl"></i></button>
+                <button class="relative text-charcoal/80 hover:text-charcoal transition-colors transform hover:scale-105" aria-label="Cart">
+                    <i class="ph ph-shopping-bag text-xl"></i>
+                    <span class="absolute -top-1.5 -right-2 bg-terracotta text-cream text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center border border-cream">3</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section class="pt-24 md:pt-20 min-h-[100dvh] md:min-h-[90vh] flex flex-col relative max-w-[1400px] mx-auto">
+        <div class="flex-1 flex flex-col md:flex-row w-full">
+            <div class="w-full md:w-[45%] lg:w-[40%] flex flex-col justify-center px-6 md:px-12 py-16 md:py-0 z-10">
+                <div class="reveal">
+                    <span class="text-sage text-sm font-semibold uppercase tracking-[0.2em] mb-4 block">Spring / Summer 2024</span>
+                    <h1 class="font-serif text-5xl sm:text-6xl lg:text-[5.5rem] leading-[0.9] tracking-tighter text-charcoal mb-6">Curated<br>Style.<br><span class="italic font-light text-charcoal/80">Delivered.</span></h1>
+                    <p class="text-charcoal/70 text-lg sm:text-xl font-light mb-10 max-w-sm leading-relaxed">Elevate your everyday wardrobe with our deliberately sourced, sustainably crafted essentials.</p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="#" class="inline-flex items-center justify-center bg-charcoal text-cream px-8 py-3.5 rounded-xl font-medium text-sm transition-all duration-300 hover:bg-terracotta hover:-translate-y-[2px] shadow-lg shadow-charcoal/10 group">Shop New Arrivals<i class="ph ph-arrow-right ml-2 opacity-70 group-hover:opacity-100 group-hover:translate-x-1 transition-all"></i></a>
+                        <a href="#" class="inline-flex items-center justify-center border border-charcoal/20 text-charcoal px-8 py-3.5 rounded-xl font-medium text-sm transition-all duration-300 hover:border-charcoal hover:bg-charcoal/5">Explore Collections</a>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full md:w-[55%] lg:w-[60%] h-[60vh] md:h-auto relative px-4 md:px-0 md:pr-4 pb-4 md:py-4">
+                <div class="w-full h-full rounded-[2rem] overflow-hidden relative shadow-premium reveal reveal-delay-1 select-none">
+                    <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80" alt="Model" class="w-full h-full object-cover object-[50%_30%]">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-terracotta/20 via-transparent to-transparent mix-blend-multiply pointer-events-none"></div>
+                    <div class="absolute inset-0 border border-white/20 rounded-[2rem] pointer-events-none mix-blend-overlay"></div>
+                </div>
+            </div>
+        </div>
+        <div class="w-full border-t border-charcoal/10 border-b md:border-b-0 py-5 mt-auto">
+            <div class="max-w-[1400px] mx-auto px-6 md:px-12 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs font-semibold uppercase tracking-widest text-charcoal/60">
+                <div class="flex items-center gap-2 reveal h-full"><i class="ph ph-package text-lg"></i>Complimentary Shipping on $150+</div>
+                <div class="hidden sm:block w-[1px] h-4 bg-charcoal/20"></div>
+                <div class="flex items-center gap-2 reveal reveal-delay-1 h-full"><i class="ph ph-arrow-u-up-left text-lg"></i>30-Day Effortless Returns</div>
+                <div class="hidden sm:block w-[1px] h-4 bg-charcoal/20"></div>
+                <div class="flex items-center gap-2 reveal reveal-delay-2 h-full"><i class="ph ph-lock-key text-lg"></i>Secure Encrypted Checkout</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 max-w-[1400px] mx-auto px-4 md:px-8">
+        <div class="mb-12 flex justify-between items-end reveal">
+            <h2 class="font-serif text-3xl md:text-5xl tracking-tight text-charcoal leading-none">Shop by<br>Category</h2>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            <a href="#" class="group relative h-[450px] lg:h-[550px] rounded-[1.5rem] overflow-hidden reveal bg-charcoal/5 block">
+                <img src="https://images.unsplash.com/photo-1509631179647-0c5000642f13?auto=format&fit=crop&w=800&q=80" alt="Women" class="w-full h-full object-cover transition-transform duration-[1.2s] ease-expo group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-charcoal/10 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+                <div class="absolute bottom-8 left-8"><div class="bg-cream/20 backdrop-blur-md border border-white/20 text-cream px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-bold mb-3 inline-block">240 Pieces</div><h3 class="font-serif text-3xl text-cream">Womenswear</h3></div>
+            </a>
+            <a href="#" class="group relative h-[450px] lg:h-[550px] rounded-[1.5rem] overflow-hidden reveal reveal-delay-1 bg-charcoal/5 block">
+                <img src="https://images.unsplash.com/photo-1480455624313-e29b44bbfde1?auto=format&fit=crop&w=800&q=80" alt="Men" class="w-full h-full object-cover object-top transition-transform duration-[1.2s] ease-expo group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-charcoal/10 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+                <div class="absolute bottom-8 left-8"><div class="bg-cream/20 backdrop-blur-md border border-white/20 text-cream px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-bold mb-3 inline-block">185 Pieces</div><h3 class="font-serif text-3xl text-cream">Menswear</h3></div>
+            </a>
+            <a href="#" class="group relative h-[450px] lg:h-[550px] rounded-[1.5rem] overflow-hidden reveal reveal-delay-2 bg-charcoal/5 block">
+                <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=800&q=80" alt="Accessories" class="w-full h-full object-cover transition-transform duration-[1.2s] ease-expo group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-charcoal/10 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+                <div class="absolute bottom-8 left-8"><div class="bg-cream/20 backdrop-blur-md border border-white/20 text-cream px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-bold mb-3 inline-block">92 Pieces</div><h3 class="font-serif text-3xl text-cream">Accessories</h3></div>
+            </a>
+            <a href="#" class="group relative h-[450px] lg:h-[550px] rounded-[1.5rem] overflow-hidden reveal reveal-delay-3 bg-charcoal/5 block">
+                <img src="https://images.unsplash.com/photo-1618220179428-22790b46a0eb?auto=format&fit=crop&w=800&q=80" alt="Home" class="w-full h-full object-cover transition-transform duration-[1.2s] ease-expo group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-charcoal/10 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+                <div class="absolute bottom-8 left-8"><div class="bg-cream/20 backdrop-blur-md border border-white/20 text-cream px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-bold mb-3 inline-block">45 Pieces</div><h3 class="font-serif text-3xl text-cream">Living / Home</h3></div>
+            </a>
+        </div>
+    </section>
+
+    <section class="py-24 bg-cream-dark/30">
+        <div class="max-w-[1400px] mx-auto px-4 md:px-8">
+            <div class="flex justify-between items-end mb-12 border-b border-charcoal/10 pb-6 reveal">
+                <div><h2 class="font-serif text-3xl md:text-4xl tracking-tight text-charcoal">The Selection</h2><p class="text-charcoal/60 mt-2 font-light">Highly considered pieces for the modern wardrobe.</p></div>
+                <a href="#" class="nav-link text-sm font-semibold uppercase tracking-wider text-charcoal mb-2 hidden sm:block">View Complete Edit</a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
+                <div class="group cursor-pointer reveal flex flex-col">
+                    <div class="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-charcoal/5 mb-4 group/image">
+                        <img src="https://images.unsplash.com/photo-1550614000-4b95d4ed8ee3?auto=format&fit=crop&w=600&q=80" alt="Blazer" class="w-full h-full object-cover object-center transition-transform duration-[1.5s] ease-expo group-hover/image:scale-105">
+                        <div class="absolute top-4 left-4 flex flex-col gap-2"><span class="bg-terracotta text-cream text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">New</span></div>
+                        <div class="absolute bottom-4 left-4 right-4 translate-y-16 opacity-0 group-hover/image:translate-y-0 group-hover/image:opacity-100 transition-all duration-300 ease-out z-10"><button class="w-full bg-cream/90 backdrop-blur-sm text-charcoal font-medium py-3 rounded-xl shadow-lg border border-white/50 hover:bg-charcoal hover:text-cream transition-colors flex items-center justify-center gap-2"><i class="ph ph-handbag"></i> Quick Add</button></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-start mb-1"><span class="text-xs uppercase tracking-[0.15em] text-sage font-bold">Studio Nicholson</span><div class="flex text-gold text-xs"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star-half"></i></div></div>
+                        <h4 class="text-charcoal font-medium truncate mb-2 leading-tight pr-4">Italian Wool Soft Tailored Blazer</h4>
+                        <div class="flex items-center gap-3"><span class="font-serif text-lg text-charcoal">$495</span></div>
+                    </div>
+                </div>
+                <div class="group cursor-pointer reveal reveal-delay-1 flex flex-col">
+                    <div class="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-charcoal/5 mb-4 group/image">
+                        <img src="https://images.unsplash.com/photo-1596783046200-a4a3dae21b77?auto=format&fit=crop&w=600&q=80" alt="Tank" class="w-full h-full object-cover object-center transition-transform duration-[1.5s] ease-expo group-hover/image:scale-105">
+                        <div class="absolute bottom-4 left-4 right-4 translate-y-16 opacity-0 group-hover/image:translate-y-0 group-hover/image:opacity-100 transition-all duration-300 ease-out z-10"><button class="w-full bg-cream/90 backdrop-blur-sm text-charcoal font-medium py-3 rounded-xl shadow-lg border border-white/50 hover:bg-charcoal hover:text-cream transition-colors flex items-center justify-center gap-2"><i class="ph ph-handbag"></i> Quick Add</button></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-start mb-1"><span class="text-xs uppercase tracking-[0.15em] text-sage font-bold">Lemaire</span><div class="flex text-gold text-xs"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></div></div>
+                        <h4 class="text-charcoal font-medium truncate mb-2 leading-tight pr-4">Ribbed Silk Blend Tank</h4>
+                        <div class="flex items-center gap-3"><span class="font-serif text-lg text-charcoal">$185</span></div>
+                    </div>
+                </div>
+                <div class="group cursor-pointer reveal reveal-delay-2 flex flex-col">
+                    <div class="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-charcoal/5 mb-4 group/image">
+                        <img src="https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?auto=format&fit=crop&w=600&q=80" alt="Trousers" class="w-full h-full object-cover object-center transition-transform duration-[1.5s] ease-expo group-hover/image:scale-105">
+                        <div class="absolute top-4 left-4 flex flex-col gap-2"><span class="bg-charcoal text-cream text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">-30%</span></div>
+                        <div class="absolute bottom-4 left-4 right-4 translate-y-16 opacity-0 group-hover/image:translate-y-0 group-hover/image:opacity-100 transition-all duration-300 ease-out z-10"><button class="w-full bg-cream/90 backdrop-blur-sm text-charcoal font-medium py-3 rounded-xl shadow-lg border border-white/50 hover:bg-charcoal hover:text-cream transition-colors flex items-center justify-center gap-2"><i class="ph ph-handbag"></i> Quick Add</button></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-start mb-1"><span class="text-xs uppercase tracking-[0.15em] text-sage font-bold">The Row</span><div class="flex text-gold text-xs"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph ph-star"></i></div></div>
+                        <h4 class="text-charcoal font-medium truncate mb-2 leading-tight pr-4">Pleated Wide Leg Trouser</h4>
+                        <div class="flex items-center gap-3"><span class="font-serif text-lg text-terracotta">$255</span><span class="text-sm text-charcoal/40 line-through">$365</span></div>
+                    </div>
+                </div>
+                <div class="group cursor-pointer reveal reveal-delay-3 flex flex-col">
+                    <div class="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-charcoal/5 mb-4 group/image">
+                        <img src="https://images.unsplash.com/photo-1591369822096-0d4a9dc30e06?auto=format&fit=crop&w=600&q=80" alt="Tote" class="w-full h-full object-cover object-center transition-transform duration-[1.5s] ease-expo group-hover/image:scale-105">
+                        <div class="absolute bottom-4 left-4 right-4 translate-y-16 opacity-0 group-hover/image:translate-y-0 group-hover/image:opacity-100 transition-all duration-300 ease-out z-10"><button class="w-full bg-cream/90 backdrop-blur-sm text-charcoal font-medium py-3 rounded-xl shadow-lg border border-white/50 hover:bg-charcoal hover:text-cream transition-colors flex items-center justify-center gap-2"><i class="ph ph-handbag"></i> Quick Add</button></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-start mb-1"><span class="text-xs uppercase tracking-[0.15em] text-sage font-bold">Aesther Ekme</span><div class="flex text-gold text-xs"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></div></div>
+                        <h4 class="text-charcoal font-medium truncate mb-2 leading-tight pr-4">Demi Lune Leather Tote</h4>
+                        <div class="flex items-center gap-3"><span class="font-serif text-lg text-charcoal">$410</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-12 md:py-24 px-4 md:px-8 max-w-[1400px] mx-auto">
+        <div class="bg-charcoal rounded-[2rem] overflow-hidden flex flex-col md:flex-row shadow-premium relative reveal">
+            <div class="absolute -top-32 -left-32 w-64 h-64 bg-terracotta rounded-full mix-blend-screen opacity-20 blur-3xl pointer-events-none"></div>
+            <div class="w-full md:w-1/2 p-10 md:p-16 lg:p-24 flex flex-col justify-center text-cream z-10">
+                <span class="text-terracotta text-xs font-bold uppercase tracking-[0.2em] mb-4 block">Limited Time Event</span>
+                <h2 class="font-serif text-4xl lg:text-6xl leading-[1.1] mb-6">The Mid-Season<br>Archive Sale.</h2>
+                <p class="text-cream/70 text-lg mb-10 max-w-sm font-light">Enjoy up to 40% off selected styles from our previous collections. Rare pieces, limited quantities.</p>
+                <div><a href="#" class="inline-flex items-center justify-center bg-cream text-charcoal px-8 py-4 rounded-xl font-medium text-sm transition-transform hover:-translate-y-1 shadow-[0_10px_20px_rgba(0,0,0,0.2)]">Unlock Sale Access</a></div>
+            </div>
+            <div class="w-full md:w-1/2 h-[400px] md:h-auto relative">
+                <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1600&q=80" alt="Editorial" class="w-full h-full object-cover">
+            </div>
+        </div>
+    </section>
+
+    <section class="py-12 border-y border-charcoal/10 overflow-hidden bg-cream flex relative select-none">
+        <div class="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-cream to-transparent z-10 pointer-events-none"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-cream to-transparent z-10 pointer-events-none"></div>
+        <div class="flex animate-marquee whitespace-nowrap items-center text-charcoal/30 hover:text-charcoal/80 transition-colors duration-500 font-serif text-4xl md:text-6xl tracking-tight font-medium">
+            <span class="mx-8 md:mx-16 flex items-center">THE ROW</span> • <span class="mx-8 md:mx-16 flex items-center">KHAITE</span> • <span class="mx-8 md:mx-16 flex items-center">LEMAIRE</span> • <span class="mx-8 md:mx-16 flex items-center">JIL SANDER</span> • <span class="mx-8 md:mx-16 flex items-center">LOEWE</span> • <span class="mx-8 md:mx-16 flex items-center">MARNI</span> • <span class="mx-8 md:mx-16 flex items-center">THE ROW</span> • <span class="mx-8 md:mx-16 flex items-center">KHAITE</span> • <span class="mx-8 md:mx-16 flex items-center">LEMAIRE</span> • <span class="mx-8 md:mx-16 flex items-center">JIL SANDER</span> • <span class="mx-8 md:mx-16 flex items-center">LOEWE</span> • <span class="mx-8 md:mx-16 flex items-center">MARNI</span> •
+        </div>
+    </section>
+
+    <section class="py-24 max-w-[1400px] mx-auto px-4 md:px-8">
+        <div class="text-center mb-16 reveal"><h2 class="font-serif text-4xl text-charcoal mb-4">The Journal</h2><p class="text-charcoal/60 max-w-md mx-auto">Conversations on culture, design, and purposeful living.</p></div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 gap-y-12">
+            <article class="group cursor-pointer reveal">
+                <div class="rounded-[1.5rem] overflow-hidden aspect-[4/3] mb-6 relative"><img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80" alt="Interior" class="w-full h-full object-cover transition-transform duration-[2s] ease-out group-hover:scale-110"></div>
+                <div class="px-2"><div class="flex justify-between items-center mb-3"><span class="text-[10px] text-sage font-bold uppercase tracking-widest border border-sage/30 px-2 py-0.5 rounded-full">Architecture</span><span class="text-xs text-charcoal/50">4 Min Read</span></div><h3 class="font-serif text-2xl text-charcoal group-hover:text-terracotta transition-colors leading-snug mb-3">The Enduring Impact of Brutalist Form in Modern Spaces.</h3><p class="text-charcoal/70 text-sm line-clamp-2">Exploring how rigid concrete structures are being softened by natural textiles and warm lighting.</p></div>
+            </article>
+            <article class="group cursor-pointer reveal reveal-delay-1">
+                <div class="rounded-[1.5rem] overflow-hidden aspect-[4/3] mb-6 relative"><img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&q=80" alt="Coffee" class="w-full h-full object-cover transition-transform duration-[2s] ease-out group-hover:scale-110"></div>
+                <div class="px-2"><div class="flex justify-between items-center mb-3"><span class="text-[10px] text-sage font-bold uppercase tracking-widest border border-sage/30 px-2 py-0.5 rounded-full">Style Guide</span><span class="text-xs text-charcoal/50">3 Min Read</span></div><h3 class="font-serif text-2xl text-charcoal group-hover:text-terracotta transition-colors leading-snug mb-3">Mastering the Transitional Wardrobe.</h3><p class="text-charcoal/70 text-sm line-clamp-2">Seven essential pieces that bridge the gap between crisp mornings and sun-drenched afternoons.</p></div>
+            </article>
+            <article class="group cursor-pointer reveal reveal-delay-2">
+                <div class="rounded-[1.5rem] overflow-hidden aspect-[4/3] mb-6 relative"><img src="https://images.unsplash.com/photo-1485230895905-efdd77935de9?auto=format&fit=crop&w=800&q=80" alt="Fashion detail" class="w-full h-full object-cover transition-transform duration-[2s] ease-out group-hover:scale-110"></div>
+                <div class="px-2"><div class="flex justify-between items-center mb-3"><span class="text-[10px] text-sage font-bold uppercase tracking-widest border border-sage/30 px-2 py-0.5 rounded-full">Insights</span><span class="text-xs text-charcoal/50">6 Min Read</span></div><h3 class="font-serif text-2xl text-charcoal group-hover:text-terracotta transition-colors leading-snug mb-3">Behind the Atelier: Sourcing Sustainable Silk.</h3><p class="text-charcoal/70 text-sm line-clamp-2">A deep dive into our supply chain and the artisan partners who craft the foundation of our evening wear.</p></div>
+            </article>
+        </div>
+    </section>
+
+    <section class="max-w-[1400px] mx-auto px-4 md:px-8 pb-24">
+        <div class="bg-cream-dark rounded-[2rem] p-12 md:p-24 text-center reveal shadow-inner">
+            <i class="ph ph-envelope-simple-open text-4xl text-terracotta mb-6 mx-auto animate-float block"></i>
+            <h2 class="font-serif text-4xl text-charcoal mb-4">Join the Inner Circle</h2>
+            <p class="text-charcoal/60 mb-8 max-w-md mx-auto">Subscribe for early access to new collections, exclusive archive sales, and editorial musings.</p>
+            <form class="max-w-md mx-auto relative flex flex-col sm:flex-row gap-3">
+                <input type="email" placeholder="Enter your email address" class="flex-1 bg-cream/50 border border-charcoal/10 rounded-xl px-6 py-4 text-charcoal focus:outline-none focus:border-terracotta focus:ring-1 focus:ring-terracotta transition-all placeholder:text-charcoal/40" required>
+                <button type="submit" class="bg-charcoal text-cream px-8 py-4 rounded-xl font-medium hover:bg-terracotta transition-colors shadow-premium flex-shrink-0">Subscribe</button>
+            </form>
+            <p class="text-[10px] text-charcoal/40 mt-4 uppercase tracking-widest">By subscribing, you agree to our Privacy Policy.</p>
+        </div>
+    </section>
+
+    <footer class="bg-charcoal text-cream relative overflow-hidden py-20 pb-10">
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-sage/10 rounded-full blur-[100px] pointer-events-none"></div>
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-20 relative">
+                <div class="lg:pr-8">
+                    <a href="#" class="font-serif text-3xl font-medium tracking-tight mb-6 block">L'Édition</a>
+                    <p class="text-cream/50 text-sm leading-relaxed mb-6">Curated apparel and objects for the intentional individual. Designed in Paris, ethically sourced globally.</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 hover:text-terracotta transition-colors"><i class="ph ph-instagram-logo text-xl"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 hover:text-terracotta transition-colors"><i class="ph ph-tiktok-logo text-xl"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 hover:text-terracotta transition-colors"><i class="ph ph-pinterest-logo text-xl"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-[0.2em] mb-6 text-cream/40">Shop</h4>
+                    <ul class="space-y-4 text-sm text-cream/70">
+                        <li><a href="#" class="hover:text-cream transition-colors">New Arrivals</a></li>
+                        <li><a href="#" class="hover:text-cream transition-colors">Womenswear</a></li>
+                        <li><a href="#" class="hover:text-cream transition-colors">Menswear</a></li>
+                        <li><a href="#" class="hover:text-cream transition-colors">Accessories</a></li>
+                        <li><a href="#" class="hover:text-cream transition-colors">Living Objects</a></li>
+                        <li><a href="#" class="text-terracotta hover:text-white transition-colors">Archive Sale</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-[0.2em] mb-6 text-cream/40">Assistance</h4>
+                    <ul class="space-y-4 text-sm text-cream/70">
+                        <li><a href="#" class="hover:text-cream transition-colors">Track Order</a></li>
+                        <li><a href="#" class="hover:text-cream transition-colors">Shipping & Returns</a></li>
+                        <li><a href="#" class="hover:text-cream transition-colors">Care Guide</a></li>
+                        <li><a href="#" class="hover:text-cream transition-colors">Size Guide</a></li>
+                        <li><a href="#" class="hover:text-cream transition-colors">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-[0.2em] mb-6 text-cream/40">Company</h4>
+                    <ul class="space-y-4 text-sm text-cream/70">
+                        <li><a href="#" class="hover:text-cream transition-colors">About Us</a></li>
+                        <li><a href="#" class="hover:text-cream transition-colors">Sustainability</a></li>
+                        <li><a href="#" class="hover:text-cream transition-colors">Careers</a></li>
+                        <li><a href="#" class="hover:text-cream transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-cream transition-colors">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-cream/40">
+                <p>&copy; 2024 L'Édition. All rights reserved.</p>
+                <div class="flex gap-3 text-2xl">
+                    <i class="ph ph-credit-card hover:text-cream transition-colors cursor-pointer"></i>
+                    <i class="ph ph-currency-circle-dollar hover:text-cream transition-colors cursor-pointer"></i>
+                    <i class="ph ph-wallet hover:text-cream transition-colors cursor-pointer"></i>
+                </div>
+                <div class="flex gap-4"><span class="flex items-center gap-1 cursor-pointer hover:text-cream transition-colors"><i class="ph ph-globe"></i> English (USD)</span></div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const revealElements = document.querySelectorAll('.reveal');
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                });
+            }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+            revealElements.forEach(el => revealObserver.observe(el));
+        });
+    </script>
+</body>
+</html>

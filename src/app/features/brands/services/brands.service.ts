@@ -2,19 +2,24 @@
 
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { BrandsResponse } from '../models/brand.model';
+import { Brand, BrandsResponse } from '../models/brand.model';
 
 @Injectable({ providedIn: 'root' })
 export class BrandsService {
-
-  private readonly http    = inject(HttpClient);
+  private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.baseUrl;
 
   getAllBrands(page = 1, limit = 40): Observable<BrandsResponse> {
     return this.http.get<BrandsResponse>(`${this.baseUrl}/brands`, {
-      params: { page, limit }
+      params: { page, limit },
     });
+  }
+
+  getBrandById(id: string): Observable<Brand> {
+    return this.http
+      .get<{ data: Brand }>(`${this.baseUrl}/brands/${id}`)
+      .pipe(map((res) => res.data));
   }
 }

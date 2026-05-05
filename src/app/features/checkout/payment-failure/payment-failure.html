@@ -1,2 +1,11 @@
 <!-- Owner: Mina — feature: checkout/payment-failure -->
-<p>payment-failure works!</p>
+<section class="payment-page">
+  <div class="app-container payment-page__inner">
+    <h1 class="display-1">Payment failed</h1>
+    <p class="lede">We couldn't complete your payment. Your cart is still saved — try again or pick a different method.</p>
+    <div class="payment-page__actions">
+      <a routerLink="/checkout" class="btn-primary">Try again</a>
+      <a routerLink="/cart" class="btn-ghost">Back to cart</a>
+    </div>
+  </div>
+</section>

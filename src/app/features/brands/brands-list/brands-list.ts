@@ -1,19 +1,19 @@
 // Owner: Noura — feature: brands/list
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { BrandsService } from '../services/brands.service';
 import { Brand } from '../models/brand.model';
+import { Pagination } from '../../../shared/components/pagination/pagination';
 
 @Component({
   selector: 'app-brands-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule, Pagination, RouterLink],
   templateUrl: './brands-list.html',
   styleUrl: './brands-list.css',
 })
 export class BrandsList implements OnInit {
-
   private readonly brandsService = inject(BrandsService);
 
   private allBrands = signal<Brand[]>([]);
@@ -26,27 +26,17 @@ export class BrandsList implements OnInit {
 
   brands = computed(() => {
     let result = this.allBrands();
-
     const letter = this.activeLetter();
     const search = this.searchQuery().toLowerCase().trim();
 
     if (letter && letter !== 'all') {
-      result = result.filter(b =>
-        b.name.toLowerCase().startsWith(letter.toLowerCase())
-      );
+      result = result.filter((b) => b.name.toLowerCase().startsWith(letter.toLowerCase()));
     }
-
     if (search) {
-      result = result.filter(b =>
-        b.name.toLowerCase().includes(search)
-      );
+      result = result.filter((b) => b.name.toLowerCase().includes(search));
     }
-
     return result;
   });
-  pages = computed(() =>
-    Array.from({ length: this.totalPages() }, (_, i) => i + 1)
-  );
 
   skeletonItems = Array(12).fill(0);
   alphabetFilters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -69,14 +59,16 @@ export class BrandsList implements OnInit {
       error: () => {
         this.hasError.set(true);
         this.isLoading.set(false);
-      }
+      },
     });
   }
 
   gotoPage(page: number): void {
     if (page < 1 || page > this.totalPages() || page === this.currentPage()) return;
     this.currentPage.set(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
     this.loadBrands();
   }
 
@@ -97,7 +89,6 @@ export class BrandsList implements OnInit {
 
   onImageError(e: Event): void {
     const img = e.target as HTMLImageElement;
-    // Avoid infinite loop if the fallback also fails to load.
     img.onerror = null;
     img.src = BRAND_IMAGE_FALLBACK;
   }
@@ -107,7 +98,7 @@ const BRAND_IMAGE_FALLBACK =
   'data:image/svg+xml;utf8,' +
   encodeURIComponent(
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">' +
-      '<rect width="80" height="80" fill="#f3f4f6"/>' +
-      '<text x="40" y="44" font-size="9" text-anchor="middle" fill="#9ca3af" font-family="sans-serif">No image</text>' +
+      '<rect width="80" height="80" fill="#ECE5D2"/>' +
+      '<text x="40" y="44" font-size="9" text-anchor="middle" fill="#6B5C7E" font-family="serif">No image</text>' +
       '</svg>',
   );

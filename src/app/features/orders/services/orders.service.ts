@@ -9,7 +9,7 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { Order, ShippingAddress } from '../models/order.model';
 
@@ -45,6 +45,6 @@ export class OrdersService {
   }
 
   getOrderById(id: string): Observable<Order> {
-    return this.http.get<Order>(`${this.base}/orders/${id}`);
+    return this.http.get<{ data: Order }>(`${this.base}/orders/${id}`).pipe(map((res) => res.data));
   }
 }

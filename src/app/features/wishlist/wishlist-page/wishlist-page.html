@@ -1,88 +1,59 @@
-<div class="p-4">
+<!-- Owner: Gaber — feature: wishlist/wishlist-page -->
+<section class="wishlist-page">
+  <header class="wishlist-page__head reveal">
+    <span class="eyebrow">Saved</span>
+    <h1 class="display-1">Your wishlist.</h1>
+  </header>
 
-    <!-- Loading -->
-    @if (isLoading) {
-    <div class="text-center py-10 text-gray-500 animate-pulse">
-        Loading wishlist...
+  @if (isLoading) {
+    <div class="catalog-grid">
+      @for (i of [1,2,3,4]; track i) {
+        <div class="tile tile--skeleton"></div>
+      }
     </div>
-    }
+  }
 
-    <!-- Empty State -->
-    @if (!isLoading && wishlist.length === 0) {
-    <div class="text-center py-16 text-gray-500">
-        <p class="text-lg font-medium">Your wishlist is empty </p>
-        <p class="text-sm mt-2">Start adding products you like</p>
+  @if (!isLoading && wishlist.length === 0) {
+    <div class="placeholder">
+      <h3>Your wishlist is empty</h3>
+      <p>Save the pieces you love — we'll keep them here for you.</p>
+      <a routerLink="/products" class="btn-primary">Browse the edit</a>
     </div>
-    }
+  }
 
-    <!-- Table -->
-    @if (!isLoading && wishlist.length > 0) {
-
-    <div class="relative overflow-x-auto bg-white shadow rounded-lg border border-gray-200">
-
-        <table class="w-full text-sm text-left text-gray-700">
-
-            <thead class="text-sm bg-gray-100 border-b border-gray-200 text-gray-600">
-                <tr>
-                    <th class="px-4 py-3"></th>
-                    <th class="px-6 py-3 font-medium">Product</th>
-                    <th class="px-6 py-3 font-medium">Price</th>
-                    <th class="px-6 py-3 font-medium text-right">Action</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                @for (item of wishlist; track item._id) {
-
-                <tr class="border-b hover:bg-gray-50">
-
-                    <!-- Image -->
-                    <td class="p-4">
-                        <img [src]="item.imageCover" class="w-16 md:w-20 object-cover rounded" />
-                    </td>
-
-                    <!-- Title -->
-                    <td class="px-6 py-4 font-semibold text-gray-900">
-                        {{ item.title }}
-                    </td>
-
-                    <!-- Price -->
-                    <td class="px-6 py-4 font-semibold text-gray-900">
-                        {{ item.price | currencyFormat }}
-                    </td>
-
-                    <td class="px-6 py-4 text-right space-x-2">
-
-                        <button (click)="addToCart(item._id)"
-                            [disabled]="updatingItems[item._id] || cartService.cartItemsIds().has(item._id)"
-                            class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm disabled:opacity-50 disabled:cursor-not-allowed">
-                            @if(updatingItems[item._id]) {
-                            Adding...
-                            } @else if(cartService.cartItemsIds().has(item._id)) {
-                            In Cart
-                            } @else {
-                            Add to Cart
-                            }
-                        </button>
-
-                        <button (click)="removeItem(item._id)" [disabled]="updatingItems[item._id]"
-                            class="text-red-600 hover:underline text-sm disabled:opacity-50 disabled:cursor-not-allowed">
-                            Remove
-                        </button>
-
-                    </td>
-
-                </tr>
-
-                }
-
-            </tbody>
-
-        </table>
-
+  @if (!isLoading && wishlist.length > 0) {
+    <div class="catalog-grid reveal">
+      @for (item of wishlist; track item._id) {
+        <div class="product-card group flex flex-col">
+          <a [routerLink]="['/products', item._id]" class="product-img-wrapper relative aspect-[3/4] w-full overflow-hidden bg-paper-2 mb-5 block">
+            <span class="absolute top-4 left-4 z-10 w-2 h-2 rounded-full bg-rose shadow-[0_0_0_4px_rgba(246,244,240,0.5)]" aria-hidden="true"></span>
+            <img [src]="item.imageCover" [alt]="item.title" loading="lazy"
+              class="img-primary w-full h-full object-cover absolute inset-0" />
+            <div class="img-secondary w-full h-full absolute inset-0 bg-wash/30 backdrop-blur-[2px] flex items-center justify-center">
+              <span class="text-xs uppercase tracking-widest text-ink/70">Quick View</span>
+            </div>
+          </a>
+          <div class="flex flex-col gap-1 px-1">
+            <a [routerLink]="['/products', item._id]" class="text-sm font-sans font-normal text-ink card__title">{{ item.title }}</a>
+            <span class="text-sm font-serif text-muted tracking-tight">{{ item.price | currencyFormat }}</span>
+            <div class="wishlist__actions">
+              <button
+                type="button"
+                class="btn-link"
+                (click)="addToCart(item._id)"
+                [disabled]="updatingItems[item._id] || cartService.cartItemsIds().has(item._id)"
+              >
+                @if (updatingItems[item._id]) { Adding… }
+                @else if (cartService.cartItemsIds().has(item._id)) { In bag }
+                @else { Move to bag }
+              </button>
+              <button type="button" class="btn-link wishlist__remove" (click)="removeItem(item._id)" [disabled]="updatingItems[item._id]">
+                Remove
+              </button>
+            </div>
+          </div>
+        </div>
+      }
     </div>
-
-    }
-
-</div>
+  }
+</section>

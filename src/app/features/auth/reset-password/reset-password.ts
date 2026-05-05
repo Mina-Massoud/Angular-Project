@@ -35,6 +35,13 @@ export class ResetPassword {
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      const c = this.form.controls;
+      const msg = c.email.invalid
+        ? 'Enter a valid email address.'
+        : c.resetCode.invalid
+          ? 'Enter the verification code.'
+          : 'New password must be at least 6 characters.';
+      this.toast.error(msg);
       return;
     }
     const { email, resetCode, newPassword } = this.form.getRawValue();

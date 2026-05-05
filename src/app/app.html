@@ -1,8 +1,10 @@
 <!-- Owner: Mina — root layout -->
 <app-navbar />
-<main class="app-main">
+<main class="app-main" [class.app-main--inset]="!isHome()">
   <router-outlet />
 </main>
 <app-footer />
 <app-loading-spinner />
 <app-toast />
+<app-cart-sheet />
+<app-chatbot-widget />
