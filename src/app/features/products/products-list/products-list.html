@@ -1,10 +1,10 @@
+<!-- Owner: Youssef — feature: products/list -->
 <div class="bg-white min-h-screen px-6 py-10">
-
   <h1 class="text-3xl font-bold mb-8 text-center">Products</h1>
 
   @if (isLoading()) {
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      @for (i of [].constructor(8); track $index) {
+      @for (s of skeletons; track $index) {
         <div class="h-[320px] bg-gray-100 animate-pulse rounded-xl"></div>
       }
     </div>
@@ -13,9 +13,7 @@
   @if (!isLoading() && hasError()) {
     <div class="text-center text-gray-500">
       Failed to load products
-      <button (click)="loadProducts()" class="block mt-3 text-black underline">
-        Retry
-      </button>
+      <button (click)="loadProducts()" class="block mt-3 text-black underline">Retry</button>
     </div>
   }
 
@@ -23,37 +21,34 @@
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       @for (product of products(); track product._id) {
         <div
-          class="border rounded-xl overflow-hidden cursor-pointer hover:shadow-lg transition"
+          class="product-card border rounded-xl overflow-hidden cursor-pointer hover:shadow-lg transition"
           (click)="openDetails(product._id)"
         >
-          <img [src]="product.imageCover" class="h-48 w-full object-cover" />
+          <img [src]="product.imageCover" [alt]="product.title" class="h-48 w-full object-cover" />
 
           <div class="p-3">
-            <h3 class="font-semibold text-sm line-clamp-1">
-              {{ product.title }}
-            </h3>
-
-            <p class="text-sm text-gray-500">
-              {{ product.price }} EGP
-            </p>
+            <h3 class="font-semibold text-sm line-clamp-1">{{ product.title }}</h3>
+            <p class="text-sm text-gray-500">{{ product.price | currencyFormat }}</p>
           </div>
         </div>
       }
     </div>
   }
 
-  <!-- Pagination -->
-  <div class="flex justify-center gap-2 mt-10">
-    @for (page of pages(); track page) {
-      <button
-        (click)="goToPage(page)"
-        class="w-9 h-9 rounded-full"
-        [class.bg-black]="currentPage() === page"
-        [class.text-white]="currentPage() === page"
-        [class.bg-gray-100]="currentPage() !== page"
-      >
-        {{ page }}
-      </button>
-    }
-  </div>
+  @if (totalPages() > 1) {
+    <div class="flex justify-center gap-2 mt-10">
+      @for (page of pages(); track page) {
+        <button
+          (click)="goToPage(page)"
+          class="w-9 h-9 rounded-full"
+          [attr.aria-current]="currentPage() === page ? 'page' : null"
+          [class.bg-black]="currentPage() === page"
+          [class.text-white]="currentPage() === page"
+          [class.bg-gray-100]="currentPage() !== page"
+        >
+          {{ page }}
+        </button>
+      }
+    </div>
+  }
 </div>

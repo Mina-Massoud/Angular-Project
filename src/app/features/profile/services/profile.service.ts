@@ -11,6 +11,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { User } from '../../../core/models/user.model';
 
 export interface UpdateMePayload {
   name: string;
@@ -18,10 +19,20 @@ export interface UpdateMePayload {
   phone: string;
 }
 
+export interface UpdateMeResponse {
+  message: string;
+  data: User;
+}
+
 export interface ChangePasswordPayload {
   currentPassword: string;
   password: string;
   rePassword: string;
+}
+
+export interface ChangePasswordResponse {
+  token: string;
+  message?: string;
 }
 
 export interface Address {
@@ -44,12 +55,12 @@ export class ProfileService {
   private readonly http = inject(HttpClient);
   private readonly base = environment.baseUrl;
 
-  updateMe(payload: UpdateMePayload): Observable<any> {
-    return this.http.put(`${this.base}/users/updateMe`, payload);
+  updateMe(payload: UpdateMePayload): Observable<UpdateMeResponse> {
+    return this.http.put<UpdateMeResponse>(`${this.base}/users/updateMe`, payload);
   }
 
-  changeMyPassword(payload: ChangePasswordPayload): Observable<any> {
-    return this.http.put(`${this.base}/users/changeMyPassword`, payload);
+  changeMyPassword(payload: ChangePasswordPayload): Observable<ChangePasswordResponse> {
+    return this.http.put<ChangePasswordResponse>(`${this.base}/users/changeMyPassword`, payload);
   }
 
   getAddresses(): Observable<{ data: Address[] }> {

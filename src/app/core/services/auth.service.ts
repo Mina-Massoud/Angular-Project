@@ -33,6 +33,10 @@ export class AuthService {
 
   readonly currentUser = signal<User | null>(null);
 
+  updateCurrentUser(user: User): void {
+    this.currentUser.set(user);
+  }
+
   signUp(payload: SignUpPayload): Observable<AuthResponse> {
     return this.http
       .post<AuthResponse>(`${this.base}/signup`, payload)

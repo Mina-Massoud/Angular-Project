@@ -1,17 +1,18 @@
 // Owner: Mostafa Shanab — feature: profile/profile-page
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
+  DestroyRef,
   inject,
   OnInit,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { ProfileService } from '../services/profile.service';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-profile-page',
@@ -26,7 +27,7 @@ export class ProfilePage implements OnInit {
   private readonly profileService = inject(ProfileService);
   private readonly auth = inject(AuthService);
   private readonly toast = inject(ToastService);
-  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly submitting = signal(false);
 
@@ -53,17 +54,20 @@ export class ProfilePage implements OnInit {
       return;
     }
     this.submitting.set(true);
-    this.profileService.updateMe(this.form.getRawValue()).subscribe({
-      next: (res) => {
-        this.auth.currentUser.set(res.data);
-        this.toast.success('Profile updated successfully');
-        this.submitting.set(false);
-        this.cdr.markForCheck();
-      },
-      error: () => {
-        this.submitting.set(false);
-        this.cdr.markForCheck();
-      },
-    });
+    this.profileService
+      .updateMe(this.form.getRawValue())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res) => {
+          this.auth.updateCurrentUser(res.data);
+          this.toast.success('Profile updated successfully');
+          this.submitting.set(false);
+        },
+        error: (err) => {
+          console.error('Failed to update profile', err);
+          this.toast.error('Failed to update profile');
+          this.submitting.set(false);
+        },
+      });
   }
 }

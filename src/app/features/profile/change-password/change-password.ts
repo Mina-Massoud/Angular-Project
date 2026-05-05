@@ -1,8 +1,8 @@
 // Owner: Mostafa Shanab — feature: profile/change-password
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
+  DestroyRef,
   inject,
   signal,
 } from '@angular/core';
@@ -13,7 +13,8 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { ProfileService } from '../services/profile.service';
@@ -36,9 +37,8 @@ export class ChangePassword {
   private readonly fb = inject(FormBuilder);
   private readonly profileService = inject(ProfileService);
   private readonly auth = inject(AuthService);
-  private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
-  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly submitting = signal(false);
 
@@ -51,22 +51,33 @@ export class ChangePassword {
     { validators: passwordMatchValidator },
   );
 
+  constructor() {
+    // Re-run cross-field validation when password changes, not just rePassword.
+    // Why: stale "passwords do not match" stays visible after editing password back to a match.
+    this.form.controls.password.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.form.controls.rePassword.updateValueAndValidity());
+  }
+
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
     this.submitting.set(true);
-    this.profileService.changeMyPassword(this.form.getRawValue()).subscribe({
-      next: () => {
-        this.toast.success('Password changed. Please sign in again.');
-        this.auth.logout();
-        this.router.navigate(['/auth/sign-in']);
-      },
-      error: () => {
-        this.submitting.set(false);
-        this.cdr.markForCheck();
-      },
-    });
+    this.profileService
+      .changeMyPassword(this.form.getRawValue())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.toast.success('Password changed. Please sign in again.');
+          this.auth.logout();
+        },
+        error: (err) => {
+          console.error('Failed to change password', err);
+          this.toast.error(err?.error?.errors?.msg ?? 'Failed to change password');
+          this.submitting.set(false);
+        },
+      });
   }
 }
