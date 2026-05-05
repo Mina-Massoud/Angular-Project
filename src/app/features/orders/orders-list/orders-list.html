@@ -1,2 +1,66 @@
 <!-- Owner: Mostafa Shanab — feature: orders/list -->
-<p>orders-list works!</p>
+<section class="orders-page">
+  <div class="orders-wrap">
+    <h1 class="orders-title">My Orders</h1>
+
+    <!-- Loading -->
+    @if (isLoading()) {
+      <div class="orders-state">Loading your orders…</div>
+    }
+
+    <!-- Error -->
+    @if (!isLoading() && hasError()) {
+      <div class="orders-state">
+        <p>Failed to load orders.</p>
+        <button class="btn btn--primary" (click)="loadOrders()">Try Again</button>
+      </div>
+    }
+
+    <!-- Empty -->
+    @if (!isLoading() && !hasError() && orders().length === 0) {
+      <div class="orders-state">
+        <p>You haven't placed any orders yet.</p>
+        <a routerLink="/products" class="btn btn--primary">Start Shopping</a>
+      </div>
+    }
+
+    <!-- List -->
+    @if (!isLoading() && !hasError() && orders().length > 0) {
+      <div class="orders-list">
+        @for (order of orders(); track order._id) {
+          <div class="order-card">
+            <div class="order-card__top">
+              <div>
+                <span class="order-card__id">Order #{{ order._id.slice(-6).toUpperCase() }}</span>
+                <span class="order-card__date">{{ order.createdAt | date: 'mediumDate' }}</span>
+              </div>
+              <div class="order-card__badges">
+                <span
+                  class="badge"
+                  [class.badge--green]="order.isPaid"
+                  [class.badge--gray]="!order.isPaid"
+                >
+                  {{ order.isPaid ? 'Paid' : 'Unpaid' }}
+                </span>
+                <span
+                  class="badge"
+                  [class.badge--green]="order.isDelivered"
+                  [class.badge--gray]="!order.isDelivered"
+                >
+                  {{ order.isDelivered ? 'Delivered' : 'Pending' }}
+                </span>
+              </div>
+            </div>
+
+            <div class="order-card__meta">
+              <span>{{ order.cartItems.length }} item(s)</span>
+              <span class="order-card__total">{{ order.totalOrderPrice | currencyFormat }}</span>
+            </div>
+
+            <a [routerLink]="['/orders', order._id]" class="order-card__link">View Details →</a>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</section>

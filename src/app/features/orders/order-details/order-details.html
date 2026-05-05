@@ -1,2 +1,86 @@
 <!-- Owner: Mostafa Shanab — feature: orders/details -->
-<p>order-details works!</p>
+<section class="od-page">
+  <div class="od-wrap">
+    <a routerLink="/orders" class="od-back">← Back to Orders</a>
+
+    <!-- Loading -->
+    @if (isLoading()) {
+      <div class="od-state">Loading order…</div>
+    }
+
+    <!-- Error -->
+    @if (!isLoading() && hasError()) {
+      <div class="od-state">Failed to load order. <a routerLink="/orders">Go back</a></div>
+    }
+
+    <!-- Content -->
+    @if (!isLoading() && !hasError() && order(); as o) {
+      <div class="od-header">
+        <div>
+          <h1 class="od-title">Order #{{ o._id.slice(-6).toUpperCase() }}</h1>
+          <p class="od-date">Placed on {{ o.createdAt | date: 'longDate' }}</p>
+        </div>
+        <div class="od-badges">
+          <span class="badge" [class.badge--green]="o.isPaid" [class.badge--gray]="!o.isPaid">
+            {{ o.isPaid ? 'Paid' : 'Unpaid' }}
+          </span>
+          <span
+            class="badge"
+            [class.badge--green]="o.isDelivered"
+            [class.badge--gray]="!o.isDelivered"
+          >
+            {{ o.isDelivered ? 'Delivered' : 'Pending Delivery' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Items -->
+      <div class="od-section">
+        <h2 class="od-section__title">Items</h2>
+        <div class="od-items">
+          @for (item of o.cartItems; track item.product._id) {
+            <div class="od-item">
+              <img
+                [src]="item.product.imageCover"
+                [alt]="item.product.title"
+                class="od-item__img"
+              />
+              <div class="od-item__info">
+                <p class="od-item__name">{{ item.product.title }}</p>
+                <p class="od-item__meta">
+                  Qty: {{ item.count }} · {{ item.price | currencyFormat }}
+                </p>
+              </div>
+              <p class="od-item__subtotal">{{ item.count * item.price | currencyFormat }}</p>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Shipping -->
+      <div class="od-section">
+        <h2 class="od-section__title">Shipping Address</h2>
+        <div class="od-info-box">
+          <p>{{ o.shippingAddress.details }}</p>
+          <p>{{ o.shippingAddress.city }}</p>
+          <p>{{ o.shippingAddress.phone }}</p>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="od-section">
+        <h2 class="od-section__title">Summary</h2>
+        <div class="od-summary">
+          <div class="od-summary__row">
+            <span>Payment Method</span>
+            <span>{{ o.paymentMethodType === 'card' ? 'Credit Card' : 'Cash on Delivery' }}</span>
+          </div>
+          <div class="od-summary__row od-summary__row--total">
+            <span>Total</span>
+            <span>{{ o.totalOrderPrice | currencyFormat }}</span>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</section>

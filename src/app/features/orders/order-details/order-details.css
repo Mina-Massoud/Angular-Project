@@ -1,1 +1,163 @@
 /* Owner: Mostafa Shanab — feature: orders/details */
+.od-page {
+  min-height: 80vh;
+  padding: 3rem 1rem;
+  background: #f9fafb;
+}
+
+.od-wrap {
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.od-back {
+  font-size: 0.85rem;
+  color: #7c3aed;
+  text-decoration: none;
+}
+.od-back:hover {
+  text-decoration: underline;
+}
+
+.od-state {
+  text-align: center;
+  color: #6b7280;
+  padding: 4rem 0;
+}
+
+.od-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.od-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #1e1b4b;
+  margin: 0 0 0.25rem;
+}
+
+.od-date {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.od-badges {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.badge--green {
+  background: #dcfce7;
+  color: #16a34a;
+}
+.badge--gray {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.od-section {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.od-section__title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b7280;
+  margin: 0 0 1rem;
+}
+
+.od-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.od-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.od-item__img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  flex-shrink: 0;
+}
+
+.od-item__info {
+  flex: 1;
+}
+
+.od-item__name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1e1b4b;
+  margin: 0 0 0.2rem;
+}
+
+.od-item__meta {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.od-item__subtotal {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1e1b4b;
+  white-space: nowrap;
+}
+
+.od-info-box p {
+  font-size: 0.875rem;
+  color: #374151;
+  margin: 0 0 0.3rem;
+}
+
+.od-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.od-summary__row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.od-summary__row--total {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #1e1b4b;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 0.75rem;
+  margin-top: 0.25rem;
+}

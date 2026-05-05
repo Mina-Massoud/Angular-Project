@@ -1,2 +1,59 @@
 <!-- Owner: Mostafa Shanab — feature: profile/profile-page -->
-<p>profile-page works!</p>
+<section class="profile-page">
+  <div class="profile-card">
+    <h1 class="profile-title">My Profile</h1>
+    <p class="profile-sub">Update your personal information</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="profile-form" novalidate>
+      <label class="field">
+        <span class="field__label">Name</span>
+        <input
+          type="text"
+          formControlName="name"
+          autocomplete="name"
+          class="field__input"
+          [class.field__input--error]="form.controls.name.invalid && form.controls.name.touched"
+        />
+        @if (form.controls.name.invalid && form.controls.name.touched) {
+          <span class="field__error">Name must be at least 3 characters</span>
+        }
+      </label>
+
+      <label class="field">
+        <span class="field__label">Email</span>
+        <input
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          class="field__input"
+          [class.field__input--error]="form.controls.email.invalid && form.controls.email.touched"
+        />
+        @if (form.controls.email.invalid && form.controls.email.touched) {
+          <span class="field__error">Enter a valid email address</span>
+        }
+      </label>
+
+      <label class="field">
+        <span class="field__label">Phone</span>
+        <input
+          type="tel"
+          formControlName="phone"
+          autocomplete="tel"
+          class="field__input"
+          [class.field__input--error]="form.controls.phone.invalid && form.controls.phone.touched"
+        />
+        @if (form.controls.phone.invalid && form.controls.phone.touched) {
+          <span class="field__error">Enter a valid phone number (10-15 digits)</span>
+        }
+      </label>
+
+      <div class="profile-actions">
+        <button type="submit" class="btn btn--primary" [disabled]="submitting()">
+          {{ submitting() ? 'Saving…' : 'Save Changes' }}
+        </button>
+        <a routerLink="/profile/change-password" class="btn btn--outline">Change Password</a>
+        <a routerLink="/profile/addresses" class="btn btn--outline">Manage Addresses</a>
+      </div>
+    </form>
+  </div>
+</section>
