@@ -36,8 +36,13 @@ export class Navbar implements OnInit {
   ];
 
   ngOnInit() {
-    this.cartService.loadCartCount();
-    this.wishlistService.loadWishlistCount();
+    // Skip protected endpoints for guests — the backend returns 401
+    // ("You are not logged in...") which would otherwise toast on every
+    // public page load.
+    if (this.auth.isAuthenticated()) {
+      this.cartService.loadCartCount();
+      this.wishlistService.loadWishlistCount();
+    }
 
     this.isOnHome.set(this.router.url === '/' || this.router.url.startsWith('/?'));
     this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe((e) => {

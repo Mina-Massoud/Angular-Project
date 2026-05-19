@@ -23,12 +23,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         case 403: {
           const wasAuthed = auth.isAuthenticated();
 
-          // Public pages can legitimately receive 401 (bad request, stale
-          // cache, etc.). Don't yank guests away from the page they're on.
-          if (!wasAuthed) {
-            if (serverMsg) toast.error(serverMsg);
-            break;
-          }
+          // Guests on public pages don't need a toast about being logged
+          // out — silently bubble the error so call sites can decide.
+          if (!wasAuthed) break;
 
           const now = Date.now();
           if (now - lastAuthHandledAt < AUTH_DEDUP_WINDOW_MS) break;
