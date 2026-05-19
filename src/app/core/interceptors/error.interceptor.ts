@@ -1,13 +1,16 @@
 // Owner: Mina — feature: core/interceptors/error
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { ToastService } from '../services/toast.service';
 
+// Coalesces parallel 401/403 responses so the user sees one toast and one
+// redirect even when several in-flight requests fail at the same time.
+const AUTH_DEDUP_WINDOW_MS = 1500;
+let lastAuthHandledAt = 0;
+
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
-  const router = inject(Router);
   const auth = inject(AuthService);
   const toast = inject(ToastService);
 
@@ -19,21 +22,21 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         case 401:
         case 403: {
           const wasAuthed = auth.isAuthenticated();
-          if (wasAuthed) auth.logout();
 
-          if (serverMsg) {
-            toast.error(serverMsg);
-          } else if (wasAuthed) {
-            toast.error('Your session expired. Please sign in again.');
-          } else {
-            toast.info('Please sign in to continue.');
+          // Public pages can legitimately receive 401 (bad request, stale
+          // cache, etc.). Don't yank guests away from the page they're on.
+          if (!wasAuthed) {
+            if (serverMsg) toast.error(serverMsg);
+            break;
           }
 
-          const returnUrl = router.url && router.url !== '/' ? router.url : undefined;
-          router.navigate(
-            ['/auth/sign-in'],
-            returnUrl ? { queryParams: { returnUrl } } : undefined,
-          );
+          const now = Date.now();
+          if (now - lastAuthHandledAt < AUTH_DEDUP_WINDOW_MS) break;
+          lastAuthHandledAt = now;
+
+          toast.error(serverMsg ?? 'Your session expired. Please sign in again.');
+          // logout() clears the token and navigates to /auth/sign-in.
+          auth.logout();
           break;
         }
         case 404:

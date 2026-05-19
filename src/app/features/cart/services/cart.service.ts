@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { Observable, switchMap, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { Cart } from '../models/cart.model';
 
@@ -14,14 +14,23 @@ export class CartService {
   cart = signal<Cart | null>(null);
   isSheetOpen = signal(false);
 
-  // Helper to sync state from API response
+  // The Route API returns populated `product` objects from GET /cart, but
+  // only a bare product-id string from POST/PUT mutations. We need the
+  // populated shape to render the sheet (title, image, link), so any
+  // response that isn't fully populated falls back to a follow-up GET.
+  private isPopulated(res: any): boolean {
+    const products = res?.data?.products;
+    if (!Array.isArray(products) || products.length === 0) return true;
+    return typeof products[0]?.product === 'object' && products[0]?.product !== null;
+  }
+
   private syncCartState(res: any) {
     this.cartCount.set(res?.numOfCartItems || 0);
     if (res?.data?.products && Array.isArray(res.data.products)) {
       const ids = res.data.products.map((p: any) => p.product?._id || p.product);
       this.cartItemsIds.set(new Set(ids));
     }
-    if (res?.data) {
+    if (res?.data && this.isPopulated(res)) {
       this.cart.set(res as Cart);
     }
   }
@@ -35,16 +44,16 @@ export class CartService {
     }
 
     return this.http.post(this.base, { productId }).pipe(
-      tap({
-        next: (res: any) => this.syncCartState(res),
-      }),
+      tap((res: any) => this.syncCartState(res)),
+      switchMap((res: any) => (this.isPopulated(res) ? [res] : this.getCart())),
     );
   }
 
   updateQuantity(productId: string, count: number): Observable<any> {
-    return this.http
-      .put(`${this.base}/${productId}`, { count })
-      .pipe(tap((res: any) => this.syncCartState(res)));
+    return this.http.put(`${this.base}/${productId}`, { count }).pipe(
+      tap((res: any) => this.syncCartState(res)),
+      switchMap((res: any) => (this.isPopulated(res) ? [res] : this.getCart())),
+    );
   }
 
   getCart(): Observable<any> {
@@ -58,9 +67,10 @@ export class CartService {
       this.cartItemsIds.set(currentIds);
     }
 
-    return this.http
-      .delete(`${this.base}/${productId}`)
-      .pipe(tap((res: any) => this.syncCartState(res)));
+    return this.http.delete(`${this.base}/${productId}`).pipe(
+      tap((res: any) => this.syncCartState(res)),
+      switchMap((res: any) => (this.isPopulated(res) ? [res] : this.getCart())),
+    );
   }
 
   clearCart(): Observable<any> {

@@ -6,6 +6,17 @@
   color: inherit;
 }
 
+.img-primary,
+.img-secondary {
+  transition: opacity var(--dur-2) var(--ease);
+  will-change: opacity;
+}
+.img-primary { opacity: 1; }
+.img-secondary { opacity: 0; }
+
+.product-card:hover .img-primary { opacity: 0; }
+.product-card:hover .img-secondary { opacity: 1; }
+
 .card__title {
   display: -webkit-box;
   -webkit-line-clamp: 1;
